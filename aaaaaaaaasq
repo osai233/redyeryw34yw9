@@ -1,0 +1,2670 @@
+// Many things were removed, thus why there are so many unused features within the code.
+// don't yell at me for being a bad coder / having usless code in here. It works and that's what is important.
+// Also, if you got this file via file stealer or other simular means, go ahead and leak this. I'm probably gonna release it anyways.
+
+function SayTTS(msg)
+sound.PlayURL("http://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&q="..msg.."&tl=en", "mono", function(chan, num, str)	end )
+MsgC(Color(0, 182, 255), "[em0tionTTS] ",Color(255, 255, 255), "Ran message \""..msg.."\".")
+end
+
+if (_G.QAC) then
+chat.AddText(Color(0, 182, 255), "[em0tion] ",Color(255, 0, 0), "Quack Anti-cheat detected. ",Color(255, 255, 255), "it'll be best to bail ASAP, but you're mostly protected.")
+end
+if (_G.CAC) then
+chat.AddText(Color(0, 182, 255), "[em0tion] ",Color(255, 0, 0), "Cake Anti-cheat detected. ",Color(255, 255, 255), "disconnecting in hopes to avoid ban, sorry.")
+LocalPlayer():ConCommand("disconnect")
+end
+
+local function HookExist(name, identifier) //credit to STEAM_0:1:56237964 for the function
+    for k, v in pairs(hook.GetTable()) do
+        if k == name then
+            for a, b in pairs(v) do
+                if a == identifier then
+                    return true
+                end
+            end
+            return false
+        end
+    end
+end
+
+hook.Add("Think", "ulx_detour_blind", function() -- credit to crazyzultan on gmodcheats.
+    if (HookExist("HUDPaint", "ulx_blind")) then
+    chat.AddText(Color(0, 182, 255), "[em0tion] ",Color(255, 0, 0), "Blocked ",Color(255, 255, 255), "blinding attempt")
+    hook.Remove("HUDPaint", "ulx_blind")
+end
+end)
+
+render.Capture = function( ... ) -- taken from some old cheat I found on mpgh. Added it cause why not
+    chat.AddText(Color(0, 182, 255), "[em0tion] ",Color(255, 255, 255), "Blocked ",Color(255, 0, 0), "render.Capture() ",Color(255, 255, 255), "from being run.")
+    return "no."
+end
+
+render.CapturePixels = function( ... )
+		chat.AddText(Color(0, 182, 255), "[em0tion] ",Color(255, 255, 255), "Blocked ",Color(255, 0, 0), "render.CapturePixels() ",Color(255, 255, 255), "from being run.")
+		return "no."
+end
+
+function fakeqacpart()
+	net.Start( "screengrab_part")
+	net.WriteUInt( 4, 32 )
+	net.WriteData( "000000000000000000000000", 4 )
+	net.SendToServer()
+end
+
+local secondantiss = net.Receive
+
+function net.Receive(str,func)
+	if str == "screengrab_part" then
+		fakeqacpart()
+		return
+	end
+
+	return secondantiss(str,func)
+end
+
+function net.Start(str)
+	if str == "screengrab_start" then
+		chat.AddText(Color(0, 182, 255), "[em0tion] ",Color(255, 0, 0), "Blocked ",Color(255, 255, 255), "screengrab attempt.")
+		return
+	end
+end
+
+local type = type;
+local next = next;
+local version = 1
+
+local function Copy(tt, lt)
+	local copy = {}
+	if lt then
+		if type(tt) == "table" then
+			for k,v in next, tt do
+				copy[k] = Copy(k, v)
+			end
+		else
+			copy = lt
+		end
+		return copy
+	end
+	if type(tt) != "table" then
+		copy = tt
+	else
+		for k,v in next, tt do
+			copy[k] = Copy(k, v)
+		end
+	end
+	return copy
+end
+
+local surface = Copy(surface);
+local vgui = Copy(vgui);
+local input = Copy(input);
+local Color = Color;
+local ScrW, ScrH = ScrW, ScrH;
+local gui = Copy(gui);
+local math = Copy(math);
+local file = Copy(file);
+local util = Copy(util);
+
+surface.CreateFont("memeyou", {
+	font = "Arial",
+	size = 14,
+	weight = 1,
+	shadow = true,
+	antialias = true,
+});
+
+surface.CreateFont("memeyou2", {
+	font = "Arial",
+	size = 14,
+	weight = 1,
+	shadow = false,
+	antialias = true,
+});
+
+surface.CreateFont("esp", {
+font = "OCR A Std",
+size = 10,
+weight = 400,
+outline = true,
+antialias = false,
+});
+
+local msgs1 = {
+	"Im not hacking, I'm just good.",
+	"Go back to playing Undertale.",
+	"You're so bad at this game.",
+	"Git Gud",
+	"I got master C++ hacks.",
+	"Why do you even try?",
+	"Your tears of rage are delicious.",
+	"I got your IP faggot.",
+	"Don't make me ddos the server!",
+	"Send all hate to www.houseofpain.tk"
+
+}
+
+local msgs2 = { -- so original.
+	"em0tion.xyz"
+}
+
+local msgs3 = {
+	"www.AIMWARE.net | Premium Rage/Legit GMOD Cheat"
+}
+
+local msgs4 = {
+	"// em0tion.xyz"
+}
+
+local options = {
+	["Ragebot"] = {
+		{
+		 {"  ", -10, 1, 1150000, 1110, 60},
+		 {"Enabled", "Checkbox", true, 0},
+		},
+		{
+			{"Ragebot", 20, 50, 350, 240, 120},
+			{"Enabled", "Checkbox", true, 0},
+			{"Silent", "Checkbox", true, 0},
+			{"Autofire", "Checkbox", true, 0},
+			{"Autosnap", "Checkbox", false, 0},
+			{"Auto Pistol", "Checkbox", true, 0},
+			{"Non-Sticky", "Checkbox", true, 0},
+			{"Bullettime", "Checkbox", true, 0},
+			{"Rapid Fire", "Checkbox", true, 0},
+		},
+		{
+			{"Target", 20, 300, 350, 190, 120},
+			{"Selection", "Selection", "Crosshair", {"Distance", "Health", "Crosshair", "Nextshot"}, 150 },
+			{"Bodyaim", "Checkbox", false, 0},
+			{"Ignore Bots", "Checkbox", false, 0},
+			{"Ignore Team", "Checkbox", false, 0},
+			{"Ignore Friends", "Checkbox", true, 0},
+			{"Snapline", "Checkbox", true, 0},
+			{"Auto Wall", "Checkbox", false, 0},
+		},
+		{
+			{"Accuracy", 380, 50, 350, 105, 120},
+			{"Anti Spread", "Checkbox", true, 0},
+			{"Anti Recoil", "Checkbox", true, 0},
+			{"Auto Duck", "Checkbox", false, 0},
+		},
+		{
+			{"Anti-Aim", 380, 170, 350, 320, 140},
+			{"Enabled", "Checkbox", false, 0},
+			{"Pitch", "Selection", "Emotion", {"None", "Up", "Down", "Fake down", "HitMyHead", "Random", "Jitter", "Emotion"}, 150},
+			{"Yaw", "Selection", "Emotion", {"None", "Slow Spin", "Fast Spin", "Smooth Jitter", "SJ Towards", "Towards", "BTowards", "Emotion", "Static"}, 150},
+			{"Emotion Randomcoin X", "Slider", 50, 100, 150},
+			{"Emotion Randomcoin Y", "Slider", 20, 100, 150},
+			{"SJ Depth", "Slider", 5, 20, 150},
+			{"SJ Speed", "Slider", 50, 200, 150},
+		},
+	},
+	["Visuals"] = {
+		{
+		 {"  ", -10, 1, 1150000, 1110, 60},
+		 {"Enabled", "Checkbox", true, 0},
+		},
+
+		{
+			{"ESP", 20, 50, 300, 410, 220},
+			{"Box", "Checkbox", true, 0},
+			{"Filled", "Checkbox", false, 0},
+			{"Box Type", "Selection", "Edge", {"2D", "3D", "Edge"}, 50},
+			{"Name", "Checkbox", true, 0},
+			{"Health", "Checkbox", true, 0},
+			{"Health position", "Selection", "Bottom", {"Left", "Bottom"}, 50},
+			{"Rank", "Checkbox", true, 0},
+			{"XQZ", "Checkbox", false, 0},
+			{"Chams", "Checkbox", false, 0},
+			{"Skeleton", "Checkbox", false, 0},
+			{"Barrel", "Checkbox", false, 0},
+			{"Glow (LAG)", "Checkbox", false, 0},
+			{"ASUS", "Checkbox", false, 0},
+
+		},
+		{
+			{"Filter", 330, 50, 320, 110, 220},
+			{"Enemies only", "Checkbox", false, 54},
+			{"Distance", "Checkbox", false, 54},
+			{"Max Distance", "Slider", 0, 10000, 68},
+		},
+		{
+			{"Radar", 330, 170, 320, 130, 220},
+			{"Enabled", "Checkbox", false, 54},
+			{"Enimies only", "Checkbox", false, 54},
+			{"Team Colors", "Checkbox", false, 54},
+			{"Names", "Checkbox", false, 54},
+		},
+		{
+			{"Misc", 660, 50, 320, 410, 220},
+			{"Thirdperson", "Checkbox", false, 54},
+			{"Fov", "Slider", 90, 145, 74},
+			{"Mirror", "Checkbox", false, 54},
+			{"Rainbow viewmodel", "Checkbox", false, 54},
+		},
+	},
+	["Settings"] = {
+		{
+			{"Misc", 20, 20, 250, 175, 130},
+			{"Custom cursor", "Checkbox", true, 0},
+			{"Experimental background", "Checkbox", false, 0},
+			{"Slide", "Checkbox", false, 0},
+			{"Skin", "Selection", "em0tion beta", {"Aimware", "NeverVAC", "em0tion beta"}, 88},
+		},
+		{ -- here in case I decide to release it.
+			{"Changelog", 540, 20, 400, 305, 130},
+			{"Changed the \"em0tion beta\" skin.", "Checkbox", false, 999},
+		},
+
+	},
+	["Misc"] = {
+		{
+			{"Bunny Hop", 20, 20, 250, 115, 130},
+			{"BunnyHop", "Checkbox", true, 0},
+			{"AutoStrafe", "Checkbox", false, 0},
+		},
+		{
+			{"Chatspam", 20, 150, 250, 115, 130},
+			{"Enabled", "Checkbox", false, 0},
+			{"Mode", "Selection", "Normal", {"Normal", "Fake IP", "Advertise", "Bar", "Aimware", "OOC", "Clear"}, 88},
+     		{"Killspam", "Checkbox", false, 0},
+     		{"KS Mode", "Selection", "Owned", {"Owned", "Killed by", "Advertise", "HvH", "em0tion.xyz"}, 88},
+		},
+		{
+			{"TTT", 280, 20, 250, 115, 130},
+			{"Traitor Finder", "Checkbox", false, 0},
+			{"No voice battery", "Checkbox", false, 0},
+			{"Death notifications", "Checkbox", false, 0}
+		},
+		{
+			{"Bypasses", 280, 150, 250, 115, 130},
+			{"Block ads", "Checkbox", false, 0},
+		},
+		{
+			{"Exploits", 20, 280, 250, 115, 130},
+			{"Coming soon", "Checkbox", false, 9999},
+		},
+		--[[{ -- here in case I decide to release it.
+			{"Changelog", 540, 20, 400, 305, 130},
+			{"Changed the \"em0tion\" skin.", "Checkbox", false, 999},
+		},]]
+	},
+		["Colors"] = {
+		{
+			{"Box - Team", 20, 20, 250, 175, 130},
+			{"R", "Slider", 0, 255, 88},
+			{"G", "Slider", 255, 255, 88},
+			{"B", "Slider", 0, 255, 88},
+		},
+		{
+			{"Box - Enemy", 20, 205, 250, 175, 130},
+			{"R", "Slider", 255, 255, 88},
+			{"G", "Slider", 255, 255, 88},
+			{"B", "Slider", 255, 255, 88},
+		},
+
+		{
+			{"Chams - Team", 290, 20, 250, 175, 130},
+			{"Visible R", "Slider", 0, 255, 88},
+			{"Visible G", "Slider", 255, 255, 88},
+			{"Visible B", "Slider", 0, 255, 88},
+			{"Not Visible R", "Slider", 0, 255, 88},
+			{"Not Visible G", "Slider", 0, 255, 88},
+			{"Not Visible B", "Slider", 255, 255, 88},
+		},
+
+		{
+			{"Chams - Enemy", 290, 205, 250, 175, 130},
+			{"Visible R", "Slider", 255, 255, 88},
+			{"Visible G", "Slider", 0, 255, 88},
+			{"Visible B", "Slider", 0, 255, 88},
+			{"Not Visible R", "Slider", 0, 255, 88},
+			{"Not Visible G", "Slider", 182, 255, 88},
+			{"Not Visible B", "Slider", 255, 255, 88},
+		},
+		{
+			{"Menu Color", 560, 20, 250, 175, 130},
+			{"Menu R", "Slider", 0, 255, 88},
+			{"Menu G", "Slider", 182, 255, 88},
+			{"Menu B", "Slider", 255, 255, 88},
+		},
+	},
+	 ["Legitbot"] = { -- wip
+
+		 {
+ 			{"  ", -10, 1, 1150000, 1110, 60},
+ 			{"Enabled", "Checkbox", false, 0},
+ 		 },
+
+		 {
+ 			{"Triggerbot", 20, 50, 350, 120, 120},
+ 			{"Enabled", "Checkbox", false, 0},
+ 			{"On key", "Checkbox", false, 0},
+ 			{"Target Friends", "Checkbox", false, 0},
+ 			{"Target Team", "Checkbox", false, 0},
+ 		},
+		{
+ 			{"Aimbot", 20, 190, 350, 120, 120}, -- snaps when you hover over a player.
+ 			{"Enabled", "Checkbox", false, 0},
+ 			{"Silent", "Checkbox", false, 0},
+ 			{"Target Friends", "Checkbox", false, 0},
+ 			{"Target Team", "Checkbox", false, 0},
+ 		},
+	}
+}
+
+local order = {
+	"Ragebot",
+	"Legitbot",
+	"Visuals",
+	"Misc",
+	"Settings",
+	"Colors"
+};
+
+local function updatevar( men, sub, lookup, new )
+	for aa,aaa in next, options[men] do
+		for key, val in next, aaa do
+			if(aaa[1][1] != sub) then continue; end
+			if(val[1] == lookup) then
+				val[3] = new;
+			end
+		end
+	end
+end
+
+local function loadconfig()
+	if(!file.Exists("em0tioncfg.txt", "DATA")) then return; end
+	local tab = util.JSONToTable( file.Read("em0tioncfg.txt", "DATA") );
+	local cursub;
+	for k,v in next, tab do
+		if(!options[k]) then continue; end
+		for men, subtab in next, v do
+			for key, val in next, subtab do
+				if(key == 1) then cursub = val[1]; continue; end
+				updatevar(k, cursub, val[1], val[3]);
+			end
+		end
+	end
+end
+
+local function saveconfig()
+	file.Write("em0tioncfg.txt", util.TableToJSON(options));
+end
+
+local function gBool(men, sub, lookup)
+	if(!options[men]) then return; end
+	for aa,aaa in next, options[men] do
+		for key, val in next, aaa do
+			if(aaa[1][1] != sub) then continue; end
+			if(val[1] == lookup) then
+				return val[3];
+			end
+		end
+	end
+end
+
+local function gOption(men, sub, lookup)
+	if(!options[men]) then return ""; end
+	for aa,aaa in next, options[men] do
+		for key, val in next, aaa do
+			if(aaa[1][1] != sub) then continue; end
+			if(val[1] == lookup) then
+				return val[3];
+			end
+		end
+	end
+	return "";
+end
+
+local function gInt(men, sub, lookup)
+	if(!options[men]) then return 0; end
+	for aa,aaa in next, options[men] do
+		for key, val in next, aaa do
+			if(aaa[1][1] != sub) then continue; end
+			if(val[1] == lookup) then
+				return val[3];
+			end
+		end
+	end
+	return 0;
+end
+
+
+local mousedown;
+local candoslider;
+local drawlast;
+
+local visible = {};
+
+for k,v in next, order do
+	visible[v] = false;
+end
+
+-- before you start yelling at me for doing the whole skin thing in a bad way, I'm a lazy fuck so I did it in a lazy way.
+-- piss off
+
+local function DrawBackground(w, h)
+	if(gOption("Settings", "Misc", "Skin") == "NeverVAC") then
+	surface.SetDrawColor(40, 40, 40);
+	surface.DrawRect(0, 0, w, h);
+
+	local curcol = Color(0, 30, 0);
+
+	for i = 0, 30 do
+		surface.SetDrawColor(curcol);
+		curcol.g = curcol.g + 2.3;
+		surface.DrawLine(0, i, w, i);
+	end
+
+	surface.SetDrawColor(curcol);
+
+	surface.SetFont("memeyou");
+
+	local tw, th = surface.GetTextSize("em0tion.xyz");
+
+	surface.SetTextPos(5, 15 - th / 2);
+
+	surface.SetTextColor(255, 255, 255);
+
+	surface.DrawText("em0tion.xyz");
+
+	surface.DrawRect(0, 31, 5, h - 31);
+	surface.DrawRect(0, h - 5, w, h);
+	surface.DrawRect(w - 5, 31, 5, h);
+elseif(gOption("Settings", "Misc", "Skin") == "em0tion beta") then
+
+	surface.SetDrawColor(35, 35, 35, 255);
+	if(gBool("Settings", "Misc", "Transparent mode")) then surface.SetDrawColor(35, 35, 35, 235) end
+
+
+	surface.DrawRect(0, 0, w, h);
+
+	local curcol = Color(gInt("Colors", "Menu Color", "Menu R"), gInt("Colors", "Menu Color", "Menu G"), gInt("Colors", "Menu Color", "Menu B"));
+
+		surface.SetDrawColor(curcol);
+		if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetDrawColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+		surface.DrawRect(0, 0, w, 3);
+
+--[[	for i = 0, w do // rainbow top part. I like it better with the solid color.
+		local curcol = HSVToColor( 100 % 360 + i /3, 1, 1 )
+		surface.SetDrawColor(curcol);
+		surface.DrawLine(i, 1, i, 0);
+	end
+]]
+	surface.SetDrawColor(curcol);
+	if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetDrawColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+
+	surface.SetFont("memeyou");
+
+	local tw, th = surface.GetTextSize("em0tion.xyz");
+
+	surface.SetTextPos(5, 15 - th / 2);
+
+	surface.SetTextColor(255, 255, 255, 255);
+
+	surface.DrawText("em0tion.xyz");
+
+--[[	surface.DrawRect(0, 67, 5, h - 67);
+	surface.DrawRect(0, h - 5, w, h);
+	surface.DrawRect(w - 5, 67, 5, h);]]
+
+	elseif(gOption("Settings", "Misc", "Skin") == "Aimware") then
+		surface.SetDrawColor(255, 255, 255);
+	surface.DrawRect(0, 0, w, h);
+
+	local curcol = Color(182, 0, 0);
+
+	for i = 0, 30 do
+		surface.SetDrawColor(curcol);
+		curcol.r = curcol.r - 1.5;
+		surface.DrawLine(0, i, w, i);
+	end
+
+	surface.SetDrawColor(curcol);
+
+	surface.SetFont("memeyou");
+
+	local tw, th = surface.GetTextSize("em0tion.xyz");
+
+	surface.SetTextPos(5, 15 - th / 2);
+
+	surface.SetTextColor(255, 255, 255);
+
+	surface.DrawText("em0tion.xyz");
+
+	surface.DrawRect(0, 31, 5, h - 31);
+	surface.DrawRect(0, h - 5, w, h);
+	surface.DrawRect(w - 5, 31, 5, h);
+end
+end
+
+local function MouseInArea(minx, miny, maxx, maxy)
+	local mousex, mousey = gui.MousePos();
+	return(mousex < maxx && mousex > minx && mousey < maxy && mousey > miny);
+end
+
+local function DrawOptions(self, w, h)
+
+if(gOption("Settings", "Misc", "Skin") == "NeverVAC") then
+		local mx, my = self:GetPos();
+
+	local sizeper = (w - 11) / #order;
+
+	local maxx = 0;
+	for k,v in next, order do
+		local bMouse = MouseInArea(mx + 5 + maxx, my + 31, mx + 5 + maxx + sizeper, my + 31 + 30);
+		if(visible[v]) then
+			local curcol = Color(75, 75, 75);
+			for i = 0, 30 do
+				surface.SetDrawColor(curcol);
+				surface.DrawLine( 5 + maxx, 31 + i, 5 + maxx + sizeper, 31 + i);
+			end
+		elseif(bMouse) then
+			local curcol = Color(124, 124, 124);
+			for i = 0, 30 do
+				surface.SetDrawColor(curcol);
+				curcol.r, curcol.g, curcol.b = curcol.r - 1.7, curcol.g - 1.7, curcol.b - 1.7;
+				surface.DrawLine( 5 + maxx, 31 + i, 5 + maxx + sizeper, 31 + i);
+			end
+		else
+			local curcol = Color(80, 80, 80);
+			for i = 0, 30 do
+				surface.SetDrawColor(curcol);
+				curcol.r, curcol.g, curcol.b = curcol.r - 1.7, curcol.g - 1.7, curcol.b - 1.7;
+				surface.DrawLine( 5 + maxx, 31 + i, 5 + maxx + sizeper, 31 + i);
+			end
+		end
+		if(bMouse && input.IsMouseDown(MOUSE_LEFT) && !mousedown && !visible[v]) then
+			local nb = visible[v];
+			for key,val in next, visible do
+				visible[key] = false;
+			end
+			visible[v] = !nb;
+		end
+				surface.SetFont("memeyou2");
+		surface.SetTextColor(255, 255, 255);
+		local tw, th = surface.GetTextSize(v);
+		surface.SetTextPos( 5 + maxx + sizeper / 2 - tw / 2, 31 + 15 - th / 2 );
+		surface.DrawText(v);
+		maxx = maxx + sizeper;
+	end
+elseif(gOption("Settings", "Misc", "Skin") == "em0tion beta") then
+	local mx, my = self:GetPos();
+
+	local sizeper = (w - 11) / #order;
+
+	local maxx = 0;
+
+	for k,v in next, order do
+		local bMouse = MouseInArea(mx + 5 + maxx, my + 31, mx + 5 + maxx + sizeper, my + 31 + 30);
+		if(visible[v]) then
+			local curcol = Color(gInt("Colors", "Menu Color", "Menu R"), gInt("Colors", "Menu Color", "Menu G"), gInt("Colors", "Menu Color", "Menu B"))
+			for i = 0, 5 do
+				surface.SetDrawColor(curcol);
+				if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetDrawColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+				surface.DrawLine( 5 + maxx, 60 + i, 5 + maxx + sizeper, 60 + i);
+			end
+		elseif(bMouse) then
+			local curcol = Color(gInt("Colors", "Menu Color", "Menu R") / 1.5, gInt("Colors", "Menu Color", "Menu G") / 1.5, gInt("Colors", "Menu Color", "Menu B") / 1.5, 0);
+			for i = 0, 5 do
+				surface.SetDrawColor(curcol);
+				if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetDrawColor(HSVToColor( RealTime() * 120 % 360, 1, 0.5 )) end
+				surface.DrawLine( 5 + maxx, 60 + i, 5 + maxx + sizeper, 60 + i);
+			end
+		else
+			local curcol = Color(35, 35, 35);
+			for i = 0, 30 do
+				surface.SetDrawColor(curcol);
+				if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetDrawColor(HSVToColor( RealTime() * 120 % 360, 1, 0.2 )) end
+				if(gBool("Settings", "Misc", "Transparent mode")) then surface.SetDrawColor(35, 35, 35, 182) end
+				surface.DrawLine( 5 + maxx, 31 + i, 5 + maxx + sizeper, 31 + i);
+			end
+		end
+		if(bMouse && input.IsMouseDown(MOUSE_LEFT) && !mousedown && !visible[v]) then
+			local nb = visible[v];
+			for key,val in next, visible do
+				visible[key] = false;
+			end
+			visible[v] = !nb;
+		end
+		surface.SetFont("memeyou2");
+		if bMouse or visible[v] then
+		surface.SetTextColor(255, 255, 255);
+		else
+		surface.SetTextColor(100, 100, 100);
+		end
+		local tw, th = surface.GetTextSize(v);
+		surface.SetTextPos( 5 + maxx + sizeper / 2 - tw / 2, 31 + 15 - th / 2 );
+		surface.DrawText(v);
+		maxx = maxx + sizeper;
+	end
+
+elseif(gOption("Settings", "Misc", "Skin") == "Aimware") then
+		local mx, my = self:GetPos();
+
+	local sizeper = (w - 11) / #order;
+
+	local maxx = 0;
+	for k,v in next, order do
+		local bMouse = MouseInArea(mx + 5 + maxx, my + 31, mx + 5 + maxx + sizeper, my + 31 + 30);
+		if(visible[v]) then
+			local curcol = Color(0, 0, 0);
+			for i = 0, 30 do
+				surface.SetDrawColor(curcol);
+				curcol.r, curcol.g, curcol.b = curcol.r + 3, curcol.g + 3, curcol.b + 3;
+				surface.DrawLine( 5 + maxx, 31 + i, 5 + maxx + sizeper, 31 + i);
+			end
+		elseif(bMouse) then
+			local curcol = Color(124, 124, 124);
+			for i = 0, 30 do
+				surface.SetDrawColor(curcol);
+				curcol.r, curcol.g, curcol.b = curcol.r - 1.7, curcol.g - 1.7, curcol.b - 1.7;
+				surface.DrawLine( 5 + maxx, 31 + i, 5 + maxx + sizeper, 31 + i);
+			end
+		else
+			local curcol = Color(51, 51, 51);
+			for i = 0, 30 do
+				surface.SetDrawColor(curcol);
+				curcol.r, curcol.g, curcol.b = curcol.r - 1.7, curcol.g - 1.7, curcol.b - 1.7;
+				surface.DrawLine( 5 + maxx, 31 + i, 5 + maxx + sizeper, 31 + i);
+			end
+		end
+		if(bMouse && input.IsMouseDown(MOUSE_LEFT) && !mousedown && !visible[v]) then
+			local nb = visible[v];
+			for key,val in next, visible do
+				visible[key] = false;
+			end
+			visible[v] = !nb;
+		end
+				surface.SetFont("memeyou2");
+		surface.SetTextColor(255, 255, 255);
+		local tw, th = surface.GetTextSize(v);
+		surface.SetTextPos( 5 + maxx + sizeper / 2 - tw / 2, 31 + 15 - th / 2 );
+		surface.DrawText(v);
+		maxx = maxx + sizeper;
+
+end
+	end
+end
+
+local function DrawCheckbox(self, w, h, var, maxy, posx, posy, dist)
+	if(gOption("Settings", "Misc", "Skin") == "NeverVAC") then
+	surface.SetFont("memeyou2");
+	surface.SetTextColor(255, 255, 255);
+	if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetTextColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+	surface.SetTextPos( 5 + posx + 15 + 5, 61 + posy + maxy );
+	local tw, th = surface.GetTextSize(var[1]);
+	surface.DrawText(var[1]);
+
+	surface.SetDrawColor(182, 182, 182);
+	if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetDrawColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+
+	surface.DrawOutlinedRect( 5 + posx + 15 + 5 + dist + var[4], 61 + posy + maxy + 2, 14, 14);
+
+	local mx, my = self:GetPos();
+
+	local bMouse = MouseInArea(mx + 5 + posx + 15 + 5, my + 61 + posy + maxy, mx + 5 + posx + 15 + 5 + dist + 14 + var[4], my + 61 + posy + maxy + 16);
+
+	if(bMouse) then
+		surface.SetDrawColor(0, 100, 0);
+
+		surface.DrawRect( 5 + posx + 15 + 5 + dist + 2 + var[4], 61 + posy + maxy + 4, 10, 10);
+	end
+
+	if(var[3]) then
+		surface.SetDrawColor(0, 255, 0);
+		if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetDrawColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+		surface.DrawRect( 5 + posx + 15 + 5 + dist + 2 + var[4], 61 + posy + maxy + 4, 10, 10);
+		surface.SetDrawColor(0, 255, 0);
+		if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetDrawColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+		surface.DrawOutlinedRect( 5 + posx + 15 + 5 + dist + 2 + var[4], 61 + posy + maxy + 4, 10, 10);
+	end
+		if(bMouse && input.IsMouseDown(MOUSE_LEFT) && !mousedown && !drawlast) then
+		var[3] = !var[3];
+	end
+
+	elseif(gOption("Settings", "Misc", "Skin") == "em0tion beta") then
+	surface.SetFont("memeyou2");
+	surface.SetTextColor(gInt("Colors", "Menu Color", "Menu R"), gInt("Colors", "Menu Color", "Menu G"), gInt("Colors", "Menu Color", "Menu B"));
+	if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetTextColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+	surface.SetTextPos( 5 + posx + 15 + 5, 61 + posy + maxy );
+	local tw, th = surface.GetTextSize(var[1]);
+	surface.DrawText(var[1]);
+
+	surface.SetDrawColor(gInt("Colors", "Menu Color", "Menu R"), gInt("Colors", "Menu Color", "Menu G"), gInt("Colors", "Menu Color", "Menu B"));
+	if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetDrawColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+
+	surface.DrawOutlinedRect( 5 + posx + 15 + 5 + dist + var[4], 61 + posy + maxy + 2, 14, 14);
+
+	local mx, my = self:GetPos();
+
+	local bMouse = MouseInArea(mx + 5 + posx + 15 + 5, my + 61 + posy + maxy, mx + 5 + posx + 15 + 5 + dist + 14 + var[4], my + 61 + posy + maxy + 16);
+
+	if(bMouse) then
+		surface.SetDrawColor(gInt("Colors", "Menu Color", "Menu R") / 2, gInt("Colors", "Menu Color", "Menu G") / 2, gInt("Colors", "Menu Color", "Menu B") / 2);
+
+		surface.DrawRect( 5 + posx + 15 + 5 + dist + 2 + var[4], 61 + posy + maxy + 4, 10, 10);
+	end
+
+	if(var[3]) then
+		surface.SetDrawColor(gInt("Colors", "Menu Color", "Menu R"), gInt("Colors", "Menu Color", "Menu G"), gInt("Colors", "Menu Color", "Menu B"));
+		if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetDrawColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+		surface.DrawRect( 5 + posx + 15 + 5 + dist + 2 + var[4], 61 + posy + maxy + 4, 10, 10);
+		surface.SetDrawColor(gInt("Colors", "Menu Color", "Menu R"), gInt("Colors", "Menu Color", "Menu G"), gInt("Colors", "Menu Color", "Menu B"));
+		if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetDrawColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+		surface.DrawOutlinedRect( 5 + posx + 15 + 5 + dist + 2 + var[4], 61 + posy + maxy + 4, 10, 10);
+	end
+
+	if(bMouse && input.IsMouseDown(MOUSE_LEFT) && !mousedown && !drawlast) then
+		var[3] = !var[3];
+	end
+	elseif(gOption("Settings", "Misc", "Skin") == "Aimware") then
+	surface.SetFont("memeyou2");
+	surface.SetTextColor(0, 0, 0);
+	surface.SetTextPos( 5 + posx + 15 + 5, 61 + posy + maxy );
+	local tw, th = surface.GetTextSize(var[1]);
+	surface.DrawText(var[1]);
+
+	surface.SetDrawColor(163, 163, 163);
+
+	surface.DrawOutlinedRect( 5 + posx + 15 + 5 + dist + var[4], 61 + posy + maxy + 2, 14, 14);
+
+	local mx, my = self:GetPos();
+
+	local bMouse = MouseInArea(mx + 5 + posx + 15 + 5, my + 61 + posy + maxy, mx + 5 + posx + 15 + 5 + dist + 14 + var[4], my + 61 + posy + maxy + 16);
+
+	if(bMouse) then
+		surface.DrawRect( 5 + posx + 15 + 5 + dist + 2 + var[4], 61 + posy + maxy + 4, 10, 10);
+	end
+
+	if(var[3]) then
+		surface.SetDrawColor(184, 0, 0);
+		surface.DrawRect( 5 + posx + 15 + 5 + dist + 2 + var[4], 61 + posy + maxy + 4, 10, 10);
+		surface.SetDrawColor(93, 0, 0);
+		surface.DrawOutlinedRect( 5 + posx + 15 + 5 + dist + 2 + var[4], 61 + posy + maxy + 4, 10, 10);
+	end
+
+		if(bMouse && input.IsMouseDown(MOUSE_LEFT) && !mousedown && !drawlast) then
+		var[3] = !var[3];
+	end
+	end
+end
+
+local function DrawSlider(self, w, h, var, maxy, posx, posy, dist)
+	if(gOption("Settings", "Misc", "Skin") == "NeverVAC") then
+	local curnum = var[3];
+	local max = var[4];
+	local size = var[5];
+	surface.SetFont("memeyou2");
+	surface.SetTextColor(255, 255, 255)
+	if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetTextColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+
+	surface.SetTextPos( 5 + posx + 15 + 5, 61 + posy + maxy );
+	surface.DrawText(var[1]);
+
+	local tw, th = surface.GetTextSize(var[1]);
+
+	surface.SetDrawColor(182, 182, 182);
+	if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetDrawColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+
+
+	surface.DrawRect( 5 + posx + 15 + 5 + dist, 61 + posy + maxy + 9, size, 2);
+
+	local ww = math.ceil(curnum * size / max);
+
+	surface.SetDrawColor(0, 255, 0);
+	if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetDrawColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+	surface.DrawRect( 3 + posx + 15 + 5 + dist + ww, 61 + posy + maxy + 9 - 5, 4, 12);
+
+	surface.SetDrawColor(0, 255, 0);
+	if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetDrawColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+
+
+	local tw, th = surface.GetTextSize(curnum);
+
+	surface.DrawOutlinedRect( 3 + posx + 15 + 5 + dist + ww, 61 + posy + maxy + 4, 4, 12);
+
+	surface.SetTextPos( 5 + posx + 15 + 5 + dist + (size / 2) - tw / 2, 61 + posy + maxy + 16);
+
+	surface.SetTextColor(255, 255, 255)
+	if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetTextColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+
+	surface.DrawText(curnum);
+
+	local mx, my = self:GetPos();
+
+	local bMouse = MouseInArea(5 + posx + 15 + 5 + dist + mx, 61 + posy + maxy + 9 - 5 + my, 5 + posx + 15 + 5 + dist + mx + size, 61 + posy + maxy + 9 - 5 + my + 12);
+
+	if(bMouse && input.IsMouseDown(MOUSE_LEFT) && !drawlast && !candoslider) then
+		local mw, mh = gui.MousePos();
+
+		local new = math.ceil( ((mw - (mx + posx + 25 + dist - size)) - (size + 1)) / (size - 2) * max);
+		var[3] = new;
+	end
+
+	elseif(gOption("Settings", "Misc", "Skin") == "em0tion beta") then
+	local curnum = var[3];
+	local max = var[4];
+	local size = var[5];
+	surface.SetFont("memeyou2");
+	surface.SetTextColor(gInt("Colors", "Menu Color", "Menu R"), gInt("Colors", "Menu Color", "Menu G"), gInt("Colors", "Menu Color", "Menu B"));
+	if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetTextColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+
+	surface.SetTextPos( 5 + posx + 15 + 5, 61 + posy + maxy );
+	surface.DrawText(var[1]);
+
+	local tw, th = surface.GetTextSize(var[1]);
+
+	surface.SetDrawColor(gInt("Colors", "Menu Color", "Menu R"), gInt("Colors", "Menu Color", "Menu G"), gInt("Colors", "Menu Color", "Menu B"));
+	if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetDrawColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+
+
+	surface.DrawRect( 5 + posx + 15 + 5 + dist, 61 + posy + maxy + 9, size, 2);
+
+	local ww = math.ceil(curnum * size / max);
+
+	surface.SetDrawColor(gInt("Colors", "Menu Color", "Menu R"), gInt("Colors", "Menu Color", "Menu G"), gInt("Colors", "Menu Color", "Menu B"));
+	if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetDrawColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+	surface.DrawRect( 3 + posx + 15 + 5 + dist + ww, 61 + posy + maxy + 9 - 5, 4, 12);
+
+	surface.SetDrawColor(gInt("Colors", "Menu Color", "Menu R"), gInt("Colors", "Menu Color", "Menu G"), gInt("Colors", "Menu Color", "Menu B"));
+	if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetDrawColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+
+
+	local tw, th = surface.GetTextSize(curnum);
+
+	surface.DrawOutlinedRect( 3 + posx + 15 + 5 + dist + ww, 61 + posy + maxy + 4, 4, 12);
+
+	surface.SetTextPos( 5 + posx + 15 + 5 + dist + (size / 2) - tw / 2, 61 + posy + maxy + 16);
+
+	surface.SetTextColor(gInt("Colors", "Menu Color", "Menu R"), gInt("Colors", "Menu Color", "Menu G"), gInt("Colors", "Menu Color", "Menu B"))
+	if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetTextColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+
+	surface.DrawText(curnum);
+
+	local mx, my = self:GetPos();
+
+	local bMouse = MouseInArea(5 + posx + 15 + 5 + dist + mx, 61 + posy + maxy + 9 - 5 + my, 5 + posx + 15 + 5 + dist + mx + size, 61 + posy + maxy + 9 - 5 + my + 12);
+
+	if(bMouse && input.IsMouseDown(MOUSE_LEFT) && !drawlast && !candoslider) then
+		local mw, mh = gui.MousePos();
+
+		local new = math.ceil( ((mw - (mx + posx + 25 + dist - size)) - (size + 1)) / (size - 2) * max);
+		var[3] = new;
+	end
+	elseif(gOption("Settings", "Misc", "Skin") == "Aimware") then
+	local curnum = var[3];
+	local max = var[4];
+	local size = var[5];
+	surface.SetFont("memeyou2");
+	surface.SetTextColor(0, 0, 0);
+	surface.SetTextPos( 5 + posx + 15 + 5, 61 + posy + maxy );
+	surface.DrawText(var[1]);
+
+	local tw, th = surface.GetTextSize(var[1]);
+
+	surface.SetDrawColor(163, 163, 163);
+
+	surface.DrawRect( 5 + posx + 15 + 5 + dist, 61 + posy + maxy + 9, size, 2);
+
+	local ww = math.ceil(curnum * size / max);
+
+	surface.SetDrawColor(184, 0, 0);
+
+	surface.DrawRect( 3 + posx + 15 + 5 + dist + ww, 61 + posy + maxy + 9 - 5, 4, 12);
+
+	surface.SetDrawColor(93, 0, 0);
+
+	local tw, th = surface.GetTextSize(curnum);
+
+	surface.DrawOutlinedRect( 3 + posx + 15 + 5 + dist + ww, 61 + posy + maxy + 4, 4, 12);
+
+	surface.SetTextPos( 5 + posx + 15 + 5 + dist + (size / 2) - tw / 2, 61 + posy + maxy + 16);
+
+	surface.DrawText(curnum);
+
+	local mx, my = self:GetPos();
+
+	local bMouse = MouseInArea(5 + posx + 15 + 5 + dist + mx, 61 + posy + maxy + 9 - 5 + my, 5 + posx + 15 + 5 + dist + mx + size, 61 + posy + maxy + 9 - 5 + my + 12);
+
+	if(bMouse && input.IsMouseDown(MOUSE_LEFT) && !drawlast && !candoslider) then
+		local mw, mh = gui.MousePos();
+
+		local new = math.ceil( ((mw - (mx + posx + 25 + dist - size)) - (size + 1)) / (size - 2) * max);
+		var[3] = new;
+	end
+	end
+end
+
+local notyetselected;
+
+local function DrawSelect(self, w, h, var, maxy, posx, posy, dist)
+	if(gOption("Settings", "Misc", "Skin") == "NeverVAC") then
+	local size = var[5];
+	local curopt = var[3];
+
+	surface.SetDrawColor(182, 182, 182);
+
+	surface.SetFont("memeyou2");
+	surface.SetTextColor(255, 255, 255);
+	surface.SetTextPos( 5 + posx + 15 + 5, 61 + posy + maxy );
+	local tw, th = surface.GetTextSize(var[1]);
+	surface.SetTextColor(255, 255, 255)
+	if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetTextColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+
+surface.SetFont("memeyou2");
+
+	surface.DrawText(var[1]);
+	surface.SetTextColor(255, 255, 255);
+
+	surface.DrawOutlinedRect( 25 + posx + dist, 61 + posy + maxy, size, 16);
+
+	local mx, my = self:GetPos();
+
+	local bMouse = MouseInArea( mx + 25 + posx + dist, my + 61 + posy + maxy, mx + 25 + posx + dist + size, my + 61 + posy + maxy + 16)
+
+	local check = dist..posy..posx..w..h..maxy;
+
+	if(bMouse || notyetselected == check) then
+
+		surface.DrawRect(25 + posx + dist + 2, 61 + posy + maxy + 2, size - 4, 12);
+
+	end
+	surface.SetTextColor(255, 255, 255);
+
+	local tw, th = surface.GetTextSize(curopt);
+
+	surface.SetTextPos( 25 + posx + dist + 5, 61 + posy + maxy + 6 - th / 2 + 2);
+
+	surface.DrawText(curopt);
+
+surface.SetFont("memeyou2");
+
+	if(bMouse && input.IsMouseDown(MOUSE_LEFT) && !drawlast && !mousedown || notyetselected == check) then
+		notyetselected = check;
+		drawlast = function()
+			local maxy2 = 16;
+			for k,v in next, var[4] do
+				surface.SetDrawColor(100, 100, 100);
+				if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetTextColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+				surface.DrawRect( 25 + posx + dist, 61 + posy + maxy + maxy2, size, 16);
+				local bMouse2 = MouseInArea( mx + 25 + posx + dist, my + 61 + posy + maxy + maxy2, mx + 25 + posx + dist + size, my + 61 + posy + maxy + 16 + maxy2)
+				if(bMouse2) then
+					surface.SetDrawColor(120, 120, 120);
+					surface.DrawRect( 25 + posx + dist, 61 + posy + maxy + maxy2, size, 16);
+				end
+				local tw, th = surface.GetTextSize(v);
+				surface.SetTextColor(255, 255, 255);
+				surface.SetTextPos( 23 + posx + dist + 5, 61 + posy + maxy + 6 - th / 3 + 1 + maxy2);
+				surface.SetFont("memeyou2");
+				surface.DrawText(v);
+				maxy2 = maxy2 + 16;
+				if(bMouse2 && input.IsMouseDown(MOUSE_LEFT) && !mousedown) then
+					var[3] = v;
+					notyetselected = nil;
+					drawlast = nil;
+					return;
+				end
+			end
+			local bbMouse = MouseInArea( mx + 25 + posx + dist, my + 61 + posy + maxy, mx + 25 + posx + dist + size, my + 61 + posy + maxy + maxy2);
+			if(!bbMouse && input.IsMouseDown(MOUSE_LEFT) && !mousedown) then
+				 notyetselected = nil;
+				 drawlast = nil;
+				 return;
+			end
+		end
+	end
+
+surface.SetFont("memeyou2");
+elseif(gOption("Settings", "Misc", "Skin") == "em0tion beta") then
+	local size = var[5];
+	local curopt = var[3];
+
+	surface.SetFont("memeyou2");
+	surface.SetTextColor(255, 255, 255);
+	surface.SetTextPos( 5 + posx + 15 + 5, 61 + posy + maxy );
+	local tw, th = surface.GetTextSize(var[1]);
+	surface.SetTextColor(gInt("Colors", "Menu Color", "Menu R"), gInt("Colors", "Menu Color", "Menu G"), gInt("Colors", "Menu Color", "Menu B"))
+	if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetTextColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+
+surface.SetFont("memeyou2");
+
+	surface.DrawText(var[1]);
+	surface.SetTextColor(255, 255, 255);
+
+	surface.DrawOutlinedRect( 25 + posx + dist, 61 + posy + maxy, size, 16);
+
+	local mx, my = self:GetPos();
+
+	local bMouse = MouseInArea( mx + 25 + posx + dist, my + 61 + posy + maxy, mx + 25 + posx + dist + size, my + 61 + posy + maxy + 16)
+
+	local check = dist..posy..posx..w..h..maxy;
+
+	if(bMouse || notyetselected == check) then
+
+		surface.DrawRect(25 + posx + dist + 2, 61 + posy + maxy + 2, size - 4, 12);
+
+	end
+	surface.SetTextColor(255, 255, 255);
+
+	local tw, th = surface.GetTextSize(curopt);
+
+	surface.SetTextPos( 25 + posx + dist + 5, 61 + posy + maxy + 6 - th / 2 + 2);
+
+	surface.DrawText(curopt);
+
+surface.SetFont("memeyou2");
+
+	if(bMouse && input.IsMouseDown(MOUSE_LEFT) && !drawlast && !mousedown || notyetselected == check) then
+		notyetselected = check;
+		drawlast = function()
+			local maxy2 = 16;
+			for k,v in next, var[4] do
+				surface.SetDrawColor(gInt("Colors", "Menu Color", "Menu R") / 2, gInt("Colors", "Menu Color", "Menu G") / 2, gInt("Colors", "Menu Color", "Menu B") / 2);
+				if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetTextColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+				surface.DrawRect( 25 + posx + dist, 61 + posy + maxy + maxy2, size, 16);
+				local bMouse2 = MouseInArea( mx + 25 + posx + dist, my + 61 + posy + maxy + maxy2, mx + 25 + posx + dist + size, my + 61 + posy + maxy + 16 + maxy2)
+				if(bMouse2) then
+					surface.SetDrawColor(gInt("Colors", "Menu Color", "Menu R"), gInt("Colors", "Menu Color", "Menu G"), gInt("Colors", "Menu Color", "Menu B"));
+					surface.DrawRect( 25 + posx + dist, 61 + posy + maxy + maxy2, size, 16);
+				end
+				local tw, th = surface.GetTextSize(v);
+				surface.SetTextColor(255, 255, 255);
+				surface.SetTextPos( 23 + posx + dist + 5, 61 + posy + maxy + 6 - th / 3 + 1 + maxy2);
+				surface.SetFont("memeyou2");
+				surface.DrawText(v);
+				maxy2 = maxy2 + 16;
+				if(bMouse2 && input.IsMouseDown(MOUSE_LEFT) && !mousedown) then
+					var[3] = v;
+					notyetselected = nil;
+					drawlast = nil;
+					return;
+				end
+			end
+			local bbMouse = MouseInArea( mx + 25 + posx + dist, my + 61 + posy + maxy, mx + 25 + posx + dist + size, my + 61 + posy + maxy + maxy2);
+			if(!bbMouse && input.IsMouseDown(MOUSE_LEFT) && !mousedown) then
+				 notyetselected = nil;
+				 drawlast = nil;
+				 return;
+			end
+		end
+	end
+surface.SetFont("memeyou2");
+elseif(gOption("Settings", "Misc", "Skin") == "Aimware") then
+	local size = var[5];
+	local curopt = var[3];
+
+	surface.SetFont("memeyou2");
+	surface.SetTextColor(0, 0, 0);
+	surface.SetTextPos( 5 + posx + 15 + 5, 61 + posy + maxy );
+	local tw, th = surface.GetTextSize(var[1]);
+	surface.DrawText(var[1]);
+
+	surface.SetDrawColor(163, 163, 163);
+
+	surface.DrawOutlinedRect( 25 + posx + dist, 61 + posy + maxy, size, 16);
+
+	local mx, my = self:GetPos();
+
+	local bMouse = MouseInArea( mx + 25 + posx + dist, my + 61 + posy + maxy, mx + 25 + posx + dist + size, my + 61 + posy + maxy + 16)
+
+	local check = dist..posy..posx..w..h..maxy;
+
+	if(bMouse || notyetselected == check) then
+
+		surface.DrawRect(25 + posx + dist + 2, 61 + posy + maxy + 2, size - 4, 12);
+
+	end
+
+	local tw, th = surface.GetTextSize(curopt);
+
+	surface.SetTextPos( 25 + posx + dist + 5, 61 + posy + maxy + 6 - th / 2 + 2);
+
+	surface.DrawText(curopt);
+
+	if(bMouse && input.IsMouseDown(MOUSE_LEFT) && !drawlast && !mousedown || notyetselected == check) then
+		notyetselected = check;
+		drawlast = function()
+			local maxy2 = 16;
+			for k,v in next, var[4] do
+				surface.SetDrawColor(163, 163, 163);
+				surface.DrawRect( 25 + posx + dist, 61 + posy + maxy + maxy2, size, 16);
+				local bMouse2 = MouseInArea( mx + 25 + posx + dist, my + 61 + posy + maxy + maxy2, mx + 25 + posx + dist + size, my + 61 + posy + maxy + 16 + maxy2)
+				if(bMouse2) then
+					surface.SetDrawColor(200, 200, 200);
+					surface.DrawRect( 25 + posx + dist, 61 + posy + maxy + maxy2, size, 16);
+				end
+				local tw, th = surface.GetTextSize(v);
+				surface.SetTextPos( 25 + posx + dist + 5, 61 + posy + maxy + 6 - th / 2 + 2 + maxy2);
+				surface.DrawText(v);
+				maxy2 = maxy2 + 16;
+				if(bMouse2 && input.IsMouseDown(MOUSE_LEFT) && !mousedown) then
+					var[3] = v;
+					notyetselected = nil;
+					drawlast = nil;
+					return;
+				end
+			end
+			local bbMouse = MouseInArea( mx + 25 + posx + dist, my + 61 + posy + maxy, mx + 25 + posx + dist + size, my + 61 + posy + maxy + maxy2);
+			if(!bbMouse && input.IsMouseDown(MOUSE_LEFT) && !mousedown) then
+				 notyetselected = nil;
+				 drawlast = nil;
+				 return;
+			end
+		end
+	end
+end
+end
+
+local function DrawSubSub(self, w, h, k, var)
+	local opt, posx, posy, sizex, sizey, dist = var[1][1], var[1][2], var[1][3], var[1][4], var[1][5], var[1][6];
+
+	if(gOption("Settings", "Misc", "Skin") == "NeverVAC") then
+
+	surface.SetDrawColor(0, 255, 0);
+	if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetDrawColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+	if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetTextColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+
+
+	local startpos = 61 + posy;
+
+	surface.SetTextColor(0, 0, 0);
+
+	surface.SetFont("memeyou2");
+
+	local tw, th = surface.GetTextSize(opt);
+
+	if(opt != "  ") then
+	surface.SetDrawColor(70, 70, 70);
+	surface.DrawRect(5 + posx, startpos, sizex, sizey);
+	end
+
+	surface.SetDrawColor(0, 255, 0);
+
+	surface.DrawLine( 5 + posx, startpos, 5 + posx + 15, startpos);
+
+	surface.SetTextPos( 5 + posx + 15 + 5, startpos - th / 2 );
+
+	surface.DrawLine( 5 + posx + 15 + 5 + tw + 5, startpos, 5 + posx + sizex, startpos);
+
+	surface.DrawLine( 5 + posx, startpos, 5 + posx, startpos + sizey);
+
+	surface.DrawLine(5 + posx, startpos + sizey, 5 + posx + sizex, startpos + sizey );
+
+	surface.DrawLine( 5 + posx + sizex, startpos, 5 + posx + sizex, startpos + sizey);
+
+	surface.SetTextColor(255, 255, 255)
+	if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetTextColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+
+
+	surface.DrawText(opt);
+
+	elseif(gOption("Settings", "Misc", "Skin") == "em0tion beta") then
+
+	surface.SetDrawColor(gInt("Colors", "Menu Color", "Menu R"), gInt("Colors", "Menu Color", "Menu G"), gInt("Colors", "Menu Color", "Menu B"));
+	if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetDrawColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+	if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetTextColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+
+
+	local startpos = 61 + posy;
+
+	surface.SetTextColor(0, 0, 0);
+
+	surface.SetFont("memeyou2");
+
+	local tw, th = surface.GetTextSize(opt);
+
+	if(opt != "  ") then
+	surface.SetDrawColor(40, 40, 40);
+	surface.DrawRect(5 + posx, startpos, sizex + 1, sizey);
+	end
+
+	surface.SetDrawColor(gInt("Colors", "Menu Color", "Menu R"), gInt("Colors", "Menu Color", "Menu G"), gInt("Colors", "Menu Color", "Menu B"));
+
+	surface.DrawLine( 5 + posx, startpos, 5 + posx + 15, startpos);
+
+	surface.SetTextPos( 5 + posx + 15 + 5, startpos - th / 2 );
+
+	surface.DrawLine( 5 + posx + 15 + 5 + tw + 5, startpos, 5 + posx + sizex, startpos);
+
+--	surface.DrawLine( 5 + posx, startpos, 5 + posx, startpos + sizey);
+
+--	surface.DrawLine(5 + posx, startpos + sizey, 5 + posx + sizex, startpos + sizey );
+
+--	surface.DrawLine( 5 + posx + sizex, startpos, 5 + posx + sizex, startpos + sizey);
+
+	surface.SetTextColor(gInt("Colors", "Menu Color", "Menu R"), gInt("Colors", "Menu Color", "Menu G"), gInt("Colors", "Menu Color", "Menu B"))
+	if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetTextColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+
+
+	surface.DrawText(opt);
+	elseif(gOption("Settings", "Misc", "Skin") == "Aimware") then
+
+		surface.SetDrawColor(gInt("Colors", "Menu Color", "Menu R"), gInt("Colors", "Menu Color", "Menu G"), gInt("Colors", "Menu Color", "Menu B"));
+	if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetDrawColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+	if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetTextColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+
+
+	local startpos = 61 + posy;
+
+	surface.SetTextColor(0, 0, 0);
+
+	surface.SetFont("memeyou2");
+
+	local tw, th = surface.GetTextSize(opt);
+
+	if(opt != "  ") then
+	surface.SetDrawColor(240, 240, 240);
+	surface.DrawRect(5 + posx, startpos, sizex, sizey);
+
+	end
+
+	surface.SetDrawColor(182, 182, 182);
+
+	surface.DrawLine( 5 + posx, startpos, 5 + posx + 15, startpos);
+
+	surface.SetTextPos( 5 + posx + 15 + 5, startpos - th / 2 );
+
+	surface.DrawLine( 5 + posx + 15 + 5 + tw + 5, startpos, 5 + posx + sizex, startpos);
+
+	surface.DrawLine( 5 + posx, startpos, 5 + posx, startpos + sizey);
+
+	surface.DrawLine(5 + posx, startpos + sizey, 5 + posx + sizex, startpos + sizey );
+
+	surface.DrawLine( 5 + posx + sizex, startpos, 5 + posx + sizex, startpos + sizey);
+
+	surface.SetTextColor(0, 0, 0)
+	if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetTextColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
+
+
+	surface.DrawText(opt);
+
+	end
+
+	local maxy = 15;
+
+	for k,v in next, var do
+		if(k == 1) then continue; end
+		if(v[2] == "Checkbox") then
+			DrawCheckbox(self, w, h, v, maxy, posx, posy, dist);
+		elseif(v[2] == "Slider") then
+			DrawSlider(self, w, h, v, maxy, posx, posy, dist);
+		elseif(v[2] == "Selection") then
+			DrawSelect(self, w, h, v, maxy, posx, posy, dist);
+		end
+		maxy = maxy + 25;
+	end
+end
+
+local function DrawSub(self, w, h)
+	for k, v in next, visible do
+		if(!v) then continue; end
+		for _, var in next, options[k] do
+			DrawSubSub(self, w, h, k, var);
+		end
+	end
+end
+
+local insertdown2, insertdown, menuopen;
+
+local blur = Material("pp/blurscreen")
+function DrawBlurRect(x, y, w, h, b)
+	local X, Y = 0,0
+
+	surface.SetDrawColor(255,255,255)
+	surface.SetMaterial(blur)
+
+	for i = 1, b do
+		blur:SetFloat("$blur", 1.5)
+		blur:Recompute()
+
+		render.UpdateScreenEffectTexture()
+
+		render.SetScissorRect(x, y, x+w, y+h, true)
+			surface.DrawTexturedRect(X * -1, Y * -1, ScrW(), ScrH())
+		render.SetScissorRect(0, 0, 0, 0, false)
+	end
+
+   draw.RoundedBox(0,x,y,w,h,Color(gInt("Colors", "Menu Color", "Menu R"), gInt("Colors", "Menu Color", "Menu G"), gInt("Colors", "Menu Color", "Menu B"),1))
+   surface.SetDrawColor(0,0,0, 100)
+   surface.DrawRect(x,y,w,h)
+
+
+end
+
+hook.Add("DrawOverlay", "cursor", function() -- too lazy to create a cursor with polys right now, but it's on my todo list.
+	if menuopen && gBool("Settings", "Misc", "Custom cursor") then
+    local x, y = gui.MouseX(), gui.MouseY();
+    --draw.RoundedBox(4,x,y,5,5,Color(255, 255, 255, 255))
+    draw.SimpleText( "c", "marlett", x, y+1, Color( gInt("Colors", "Menu Color", "Menu R"), gInt("Colors", "Menu Color", "Menu G"), gInt("Colors", "Menu Color", "Menu B"), 255 ) )
+    draw.SimpleText( "c", "marlett", x+1, y+2, Color( 90, 90, 90, 255 ) )
+    draw.SimpleText( "c", "marlett", x+2, y+3, Color( gInt("Colors", "Menu Color", "Menu R"), gInt("Colors", "Menu Color", "Menu G"), gInt("Colors", "Menu Color", "Menu B"), 255 ) )
+    draw.SimpleText( "c", "marlett", x+3, y+4, Color( 90, 90, 90, 255 ) )
+    draw.SimpleText( "n", "marlett", x+1, y+2, Color( 90, 90, 90, 255 ) )
+end
+end)
+
+hook.Add("Think", "nvb", function() if (gBool("Misc", "TTT", "No voice battery")) then LocalPlayer().voice_battery = 100; end end)
+
+local function DrawSaveButton(self, w, h)
+	local curcol = Color(100, 100, 100);
+	local mx, my = self:GetPos();
+	local bMouse = MouseInArea(mx + 30, my + h - 50, mx + 30 + 200, my + h - 50 + 30);
+	if(bMouse) then
+		curcol = Color(90, 90, 90);
+	end
+	for i = 0, 30 do
+		surface.SetDrawColor(curcol);
+		surface.DrawLine( 30, h - 50 + i, 30 + 200, h - 50 + i );
+		for k,v in next, curcol do
+			curcol[k] = curcol[k] - 2;
+		end
+	end
+	surface.SetFont("memeyou2");
+	surface.SetTextColor(255, 255, 255);
+	local tw, th = surface.GetTextSize("Save Configuration");
+	surface.SetTextPos( 30 + 100 - tw / 2, h - 50 + 15 - th / 2 );
+	surface.DrawText("Save Configuration");
+	if(bMouse && input.IsMouseDown(MOUSE_LEFT)) then
+		saveconfig();
+	end
+end
+
+local function DrawLoadButton(self, w, h)
+	local curcol = Color(100, 100, 100);
+	local mx, my = self:GetPos();
+	local bMouse = MouseInArea(mx + 250, my + h - 50, mx + 250 + 200, my + h - 50 + 30);
+	if(bMouse) then
+		curcol = Color(90, 90, 90);
+	end
+	for i = 0, 30 do
+		surface.SetDrawColor(curcol);
+		surface.DrawLine( 250, h - 50 + i, 250 + 200, h - 50 + i );
+		for k,v in next, curcol do
+			curcol[k] = curcol[k] - 2;
+		end
+	end
+	surface.SetFont("memeyou2");
+	surface.SetTextColor(255, 255, 255);
+	local tw, th = surface.GetTextSize("Load Configuration");
+	surface.SetTextPos( 250 + 100 - tw / 2, h - 50 + 15 - th / 2 );
+	surface.DrawText("Load Configuration");
+	if(bMouse && input.IsMouseDown(MOUSE_LEFT)) then
+		loadconfig();
+	end
+end
+
+local function menu()
+	frame = vgui.Create("DFrame");
+	frame:SetSize(1000, 630);
+	frame:Center();
+	frame:SetTitle("");
+	frame:MakePopup();
+	frame:ShowCloseButton(false);
+	frame:SetDraggable(false)
+	if(gBool("Settings", "Misc", "Slide")) then
+	frame:SlideDown(0.4)
+	end
+	if(gBool("Settings", "Misc", "Experimental background")) then
+	local dhtml = vgui.Create( 'DHTML', frame )
+	dhtml:SetPos(0, 0)
+	dhtml:SetSize(frame:GetWide(), frame:GetTall())
+	dhtml:OpenURL( 'https://houseofpain.neocities.org/test.html' )
+	end
+	frame.Paint = function(self, w, h)
+		if(candoslider && !mousedown && !drawlast && !input.IsMouseDown(MOUSE_LEFT)) then
+			candoslider = false;
+		end
+		DrawBackground(w, h, "");
+		DrawOptions(self, w, h);
+		DrawSub(self, w, h);
+
+		DrawSaveButton(self, w, h);
+		DrawLoadButton(self, w, h);
+		if(drawlast) then
+			drawlast();
+			candoslider = true;
+		end
+		mousedown = input.IsMouseDown(MOUSE_LEFT);
+		if(gOption("Settings", "Misc", "Skin") == "NeverVAC") then
+		for i = 1, 5 do
+		surface.SetDrawColor(40, 40, 40)
+		surface.DrawLine( 6, 61 + i, w - 6, 61 + i)
+		surface.SetDrawColor(0, 100, 0)
+		surface.DrawLine( 0, 61 + i, 5, 61 + i)
+		surface.DrawLine( w, 61 + i, w - 5, 61 + i)
+		end
+		elseif(gOption("Settings", "Misc", "Skin") == "em0tion beta") then
+		for i = 1, 5 do
+		surface.SetDrawColor(35, 35, 35)
+		surface.DrawLine( 0, 61 + i, w, 61 + i)
+		end
+		elseif(gOption("Settings", "Misc", "Skin") == "Aimware") then
+			for i = 1, 5 do
+		surface.SetDrawColor(255, 255, 255)
+		surface.DrawLine( 6, 61 + i, w - 6, 61 + i)
+		surface.SetDrawColor(136, 0, 0)
+		surface.DrawLine( 0, 61 + i, 4, 61 + i)
+		surface.DrawLine( w, 61 + i, w - 5, 61 + i)
+	end
+	end
+	if(gOption("Settings", "Misc", "Skin") == "NeverVAC") then
+	surface.SetDrawColor(0, 255, 0);
+	surface.DrawOutlinedRect(5, 30, w - 10, h - 35);
+	surface.DrawOutlinedRect(0, 0, w, h);
+	elseif(gOption("Settings", "Misc", "Skin") == "Aimware") then
+	surface.SetDrawColor(255, 0, 0);
+	surface.DrawOutlinedRect(0, 0, w, h);
+end
+	if(!gBool("Settings", "Misc", "Custom cursor")) then
+		frame:SetCursor("none")
+	else
+		frame:SetCursor("blank")
+	end
+end
+	frame.Think = function()
+		if (input.IsKeyDown(KEY_INSERT) && !insertdown2) then
+			frame:Remove();
+			menuopen = false;
+			candoslider = false;
+			drawlast = nil;
+		end
+end
+
+end
+
+function radarm()
+local me = LocalPlayer()
+local radarf = vgui.Create( "DFrame" )
+		radarf:SetSize( 200, 300 )
+		radarf:SetTitle( "" )
+		radarf:SetVisible(true)
+		radarf:SetPos(0, 0)
+		radarf:SetDraggable(true)
+		radarf:ShowCloseButton(false)
+		--Frame:MakePopup()
+		radarf.Paint = function( self, w, h )
+
+	local radarX, radarY, radarWidth, radarHeight = 0, 0, 200, 200
+
+if(!gBool("Visuals", "  ", "Enabled")) then return; end
+if gBool("Visuals", "Radar", "Enabled") then
+
+	surface.SetDrawColor(gInt("Colors", "Menu Color", "Menu R"), gInt("Colors", "Menu Color", "Menu G"), gInt("Colors", "Menu Color", "Menu B"))
+	surface.DrawRect(0, 0, w, 3);
+
+
+	draw.RoundedBox(0,0,3,200,197,Color(75, 75, 75, 240))
+	draw.RoundedBox(0,0,100 ,200,1,Color(gInt("Colors", "Menu Color", "Menu R"), gInt("Colors", "Menu Color", "Menu G"), gInt("Colors", "Menu Color", "Menu B"), 255))
+  draw.RoundedBox(0,100,3,1,200,Color(gInt("Colors", "Menu Color", "Menu R"), gInt("Colors", "Menu Color", "Menu G"), gInt("Colors", "Menu Color", "Menu B"), 255))
+  surface.SetDrawColor(gInt("Colors", "Menu Color", "Menu R"), gInt("Colors", "Menu Color", "Menu G"), gInt("Colors", "Menu Color", "Menu B") )
+--  surface.DrawOutlinedRect(0, 0, 200, 200)
+  draw.RoundedBox(0,0,3,200,1,Color(75, 75, 75, 255))
+for k,v in next, player.GetAll() do
+local tcol = team.GetColor( v:Team() )
+	if (v:Health() > 0) then
+    local myPos = me:GetPos()
+    local theirPos = v:GetPos()
+    local myAngles = me:GetAngles()
+    local theirX = (radarX + (radarWidth / 2)) + ((theirPos.x - myPos.x) / 40)
+    local theirY = (radarY + (radarHeight / 2)) + ((myPos.y - theirPos.y) / 40)
+
+    local myRotation = myAngles.y - 90
+    myRotation = math.rad(myRotation)
+    theirX = theirX - (radarX + (radarWidth / 2))
+    theirY = theirY - (radarY + (radarHeight / 2))
+    local newX = theirX * math.cos(myRotation) - theirY * math.sin(myRotation)
+    local newY = theirX * math.sin(myRotation) + theirY * math.cos(myRotation)
+    newX = newX + (radarX + (radarWidth / 2))
+    newY = newY + (radarY + (radarHeight / 2))
+    if newX < (radarX + radarWidth) and newX > radarX and newY < (radarY + radarHeight) and newY > radarY then
+			if gBool("Visuals", "Radar", "Team Colors") && v != LocalPlayer() then
+			draw.RoundedBox(4,newX, newY,5,5,(v:Team() == me:Team() and Color(gInt("Colors", "Menu Color", "Menu R"), gInt("Colors", "Menu Color", "Menu G"), gInt("Colors", "Menu Color", "Menu B"), 0) or Color(tcol.r, tcol.g, tcol.b)))
+			if gBool("Visuals", "Radar", "Names") then
+      draw.SimpleText( v:Nick(), "DermaDefault", newX, newY, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
+		end
+		elseif v != LocalPlayer() then
+			draw.RoundedBox(4,newX, newY,5,5,Color(gInt("Colors", "Menu Color", "Menu R"), gInt("Colors", "Menu Color", "Menu G"), gInt("Colors", "Menu Color", "Menu B")))
+			if gBool("Visuals", "Radar", "Names") then
+      draw.SimpleText( v:Nick(), "DermaDefault", newX, newY, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
+						end
+    				end
+				end
+  			end
+		end
+	end
+end
+end
+
+local radaropen = false
+local function Think()
+	if (input.IsKeyDown(KEY_INSERT) && !menuopen && !insertdown) then
+		menuopen = true;
+		insertdown = true;
+		menu();
+	elseif (!input.IsKeyDown(KEY_INSERT) && !menuopen) then
+		insertdown = false;
+	end
+	if (input.IsKeyDown(KEY_INSERT) && insertdown && menuopen) then
+		insertdown2 = true;
+	else
+		insertdown2 = false;
+	end
+if gBool("Visuals", "Radar", "Enabled") then
+	if !radaropen then
+	radaropen = true
+	radarm()
+end
+end
+
+end
+
+hook.Add("Think", "", Think);
+
+local FindMetaTable = FindMetaTable;
+
+local em = FindMetaTable"Entity";
+local pm = FindMetaTable"Player";
+local wm = FindMetaTable"Weapon";
+local am = FindMetaTable"Angle";
+local vm = FindMetaTable"Vector";
+local cm = FindMetaTable"CUserCmd";
+
+local Vector = Vector;
+local player = Copy(player);
+local Angle = Angle;
+local me = LocalPlayer();
+local render = Copy(render);
+local cma = Copy(cam);
+local Material = Material;
+local CreateMaterial = CreateMaterial;
+
+local function Filter(v)
+	local enemy = gBool("Visuals", "Filter", "Enemies only");
+	local dist = gBool("Visuals", "Filter", "Distance")
+	if(enemy) then
+		if(pm.Team(v) == pm.Team(me)) then return false; end
+	end
+	if(dist) then
+		local maxdist = gBool("Visuals", "Filter", "Max Distance");
+		if( vm.Distance( em.GetPos(v), em.GetPos(me) ) > (maxdist * 5) ) then return false; end
+	end
+	return true;
+end
+
+
+
+local chamsmat = CreateMaterial("a", "VertexLitGeneric", {
+	["$ignorez"] = 1,
+	["$model"] = 1,
+	["$basetexture"] = "models/debug/debugwhite",
+});
+
+local chamsmat2 = CreateMaterial("@", "vertexlitgeneric", {
+	["$ignorez"] = 0,
+	["$model"] = 1,
+	["$basetexture"] = "models/debug/debugwhite",
+});
+
+local function GetChamsColor(v, vis)
+	local pre = "Chams - Enemy";
+	if(pm.Team(v) == pm.Team(me)) then
+		pre = "Chams - Team";
+	end
+	if(vis) then
+		local r = gInt("Colors", pre, "Visible R") / 255;
+		local g = gInt("Colors", pre, "Visible G") / 255;
+		local b = gInt("Colors", pre, "Visible B") / 255;
+		return r,g,b;
+	end
+	local r = gInt("Colors", pre, "Not Visible R") / 255;
+	local g = gInt("Colors", pre, "Not Visible G") / 255;
+	local b = gInt("Colors", pre, "Not Visible B") / 255;
+	return r,g,b;
+end
+
+local function Chams(v)
+	if(gBool("Visuals", "ESP", "XQZ")) then
+		cam.Start3D();
+			cam.IgnoreZ(true);
+			em.DrawModel(v);
+      if (v:IsValid(v:GetActiveWeapon())) then
+      em.DrawModel(v:GetActiveWeapon());
+    end
+			cam.IgnoreZ(false);
+		cam.End3D();
+	end
+	if(gBool("Visuals", "ESP", "Chams")) then
+		cam.Start3D();
+
+			render.MaterialOverride(chamsmat);
+
+			render.SetColorModulation(GetChamsColor(v));
+
+			em.DrawModel(v);
+
+			render.SetColorModulation(GetChamsColor(v, true));
+			render.MaterialOverride(chamsmat2);
+
+			em.DrawModel(v);
+
+		cam.End3D();
+	end
+end
+
+local function GetColor(v)
+	if(pm.Team(v) == pm.Team(me)) then
+		local r = gInt("Colors", "Box - Team", "R");
+		local g = gInt("Colors", "Box - Team", "G");
+		local b = gInt("Colors", "Box - Team", "B");
+		return(Color(r, g, b, 220));
+	end
+	local r = gInt("Colors", "Box - Enemy", "R");
+	local g = gInt("Colors", "Box - Enemy", "G");
+	local b = gInt("Colors", "Box - Enemy", "B");
+	return(Color(r, g, b, 220));
+end
+
+local function Get2DBounds(v)
+local eye = v:EyeAngles();
+local min,max = v:OBBMins(),v:OBBMaxs()
+local corners =
+{
+	Vector(min.x,min.y,min.z),
+	Vector(min.x,min.y,max.z),
+	Vector(min.x,max.y,min.z),
+	Vector(min.x,max.y,max.z),
+	Vector(max.x,min.y,min.z),
+	Vector(max.x,min.y,max.z),
+	Vector(max.x,max.y,min.z),
+	Vector(max.x,max.y,max.z)
+};
+
+local minx,miny,maxx,maxy = math.huge, math.huge, -math.huge, -math.huge;
+
+for _, corner in next, corners do
+	local screen = v:LocalToWorld(corner):ToScreen();
+	minx,miny = math.min(minx,screen.x),math.min(miny,screen.y);
+	maxx,maxy = math.max(maxx,screen.x),math.max(maxy,screen.y);
+end
+return minx,miny,maxx,maxy;
+end
+
+local function HasHead(ent)
+	local bone = ent:LookupBone("ValveBiped.Bip01_Head1")
+	if bone then
+		return true
+	else
+		return false
+	end
+end
+
+local function GetHeadPos(v)
+	if HasHead(v) then
+	local headpos = v:GetBonePosition(v:LookupBone("ValveBiped.Bip01_Head1"))
+	return headpos
+	else
+	return v:OBBCenter()
+	end
+end
+
+
+local function ESP(v)
+		local x1,y1,x2,y2 = Get2DBounds(v);
+		local color = Color(255,255,255);
+		local diff = math.abs(x2 - x1);
+		local diff2 = math.abs(y2 - y1);
+	    local pos = em.GetPos(v);
+	    local pos, pos2 = vm.ToScreen(pos - Vector(0, 0, 5)), vm.ToScreen( pos + Vector(0, 0, 70 ) );
+	    local h = pos.y - pos2.y;
+	    local w = h / 2.2;
+
+	if(gBool("Visuals", "ESP", "Box") && gOption("Visuals", "ESP", "Box Type") == "2D") then
+
+		surface.SetDrawColor(GetColor(v));
+		surface.DrawOutlinedRect( pos.x - w / 2, pos.y - h, w, h);
+		surface.SetDrawColor(0, 0, 0, 255);
+
+		surface.DrawOutlinedRect( pos.x - w / 2 - 1, pos.y - h - 1, w + 2, h + 2);
+		surface.DrawOutlinedRect( pos.x - w / 2 + 1, pos.y - h + 1, w - 2, h - 2);
+
+		if(gBool("Visuals", "ESP", "Filled")) then
+		local hp = em.Health(v) * h / 100;
+		if(hp > h) then hp = h; end
+		local diff = h - hp;
+		surface.SetDrawColor( ( 100 - em.Health(v) ) * 2.55, em.Health(v) * 2.55, 0, 150);
+		surface.DrawRect(pos.x - w / 2 + 2, pos.y - h + 2 + diff, w - 4, hp - 4);
+		end
+
+	elseif(gBool("Visuals", "ESP", "Box") && gOption("Visuals", "ESP", "Box Type") == "Edge") then -- pasted from flex because im a bad coder
+    local Y = pos.y - h + 1
+    local X = pos.x - w / 2 - 1
+    local W = w + 0.75
+    local H = h - 1
+    local lineW = (W / 5);
+    local lineH = (H / 6);
+    local lineT = 1;
+
+    surface.SetDrawColor(0,0,0)
+    surface.DrawLine(X - lineT, Y - lineT, X + lineW, Y - lineT);
+    surface.DrawLine(X - lineT, Y - lineT, X - lineT, Y + lineH);
+    surface.DrawLine(X - lineT, Y + H - lineH, X - lineT, Y + H + lineT);
+    surface.DrawLine(X - lineT, Y + H + lineT, X + lineW, Y + H + lineT);
+    surface.DrawLine(X + W - lineW, Y - lineT, X + W + lineT, Y - lineT);
+    surface.DrawLine(X + W + lineT, Y - lineT, X + W + lineT, Y + lineH);
+    surface.DrawLine(X + W + lineT, Y + H - lineH, X + W + lineT, Y + H + lineT);
+    surface.DrawLine(X + W - lineW, Y + H + lineT, X + W + lineT, Y + H + lineT);
+
+	surface.SetDrawColor(GetColor(v));
+    surface.DrawLine(X, Y, X, Y + lineH);
+    surface.DrawLine(X, Y, X + lineW, Y);
+    surface.DrawLine(X + W - lineW, Y, X + W, Y);
+    surface.DrawLine(X + W , Y, X + W, Y + lineH);
+    surface.DrawLine(X, Y + H - lineH, X, Y + H);
+    surface.DrawLine(X, Y + H, X + lineW, Y + H);
+    surface.DrawLine(X + W - lineW, Y + H, X + W, Y + H);
+    surface.DrawLine(X + W, Y + H - lineH, X + W, Y + H);
+
+    	if(gBool("Visuals", "ESP", "Filled")) then
+    	local hp = em.Health(v) * h / 100;
+		if(hp > h) then hp = h; end
+		local diff = h - hp;
+		surface.SetDrawColor( ( 100 - em.Health(v) ) * 2.55, em.Health(v) * 2.55, 0, 150);
+		surface.DrawRect(pos.x - w / 2 + 1, pos.y - h + 2 + diff, W - 2, hp - 3);
+		end
+
+	elseif(gBool("Visuals", "ESP", "Box") && gOption("Visuals", "ESP", "Box Type") == "3D") then
+
+		surface.SetDrawColor(GetColor(v));
+
+		local min,max = v:WorldSpaceAABB()
+		local diff = max-min
+		local pos2 = Vector(0,0,0)
+		local pos1 = Vector(0,0,0)
+		local pos3 = Vector(0,0,0)
+		local pos4 = Vector(0,0,0)
+		local pos5 = Vector(0,0,diff.z)
+		local pos6 = Vector(0,0,diff.z)
+		local pos7 = Vector(0,0,diff.z)
+		local pos8 = Vector(0,0,diff.z)
+
+		pos1 = (pos1 + v:WorldSpaceAABB() + Vector(diff.x,diff.y,0)):ToScreen()
+		pos2 = (pos2 + v:WorldSpaceAABB() + Vector(diff.x,-diff.y/14,0)):ToScreen()
+		pos3 = (pos3 + v:WorldSpaceAABB() + Vector(-diff.x/14,-diff.y/14,0)):ToScreen()
+		pos4 = (pos4 + v:WorldSpaceAABB() + Vector(-diff.x/14,diff.y,0)):ToScreen()
+		pos5 = (pos5 + v:WorldSpaceAABB() + Vector(diff.x,diff.y,0)):ToScreen()
+		pos6 = (pos6 + v:WorldSpaceAABB() + Vector(diff.x,-diff.y/14,0)):ToScreen()
+		pos7 = (pos7 + v:WorldSpaceAABB() + Vector(-diff.x/14,-diff.y/14,0)):ToScreen()
+		pos8 = (pos8 + v:WorldSpaceAABB() + Vector(-diff.x/14,diff.y,0)):ToScreen()
+
+
+		surface.SetDrawColor(0, 255, 0);
+		surface.DrawLine(pos1.x, pos1.y, pos2.x, pos2.y)
+		surface.DrawLine(pos2.x, pos2.y, pos3.x, pos3.y)
+		surface.DrawLine(pos3.x, pos3.y, pos4.x, pos4.y)
+		surface.DrawLine(pos1.x, pos1.y, pos4.x, pos4.y)
+		surface.DrawLine(pos1.x, pos1.y, pos3.x, pos3.y)
+		surface.DrawLine(pos2.x, pos2.y, pos4.x, pos4.y)
+
+		surface.SetDrawColor(GetColor(v));
+		surface.DrawLine(pos1.x, pos1.y, pos5.x, pos5.y)
+		surface.DrawLine(pos2.x, pos2.y, pos6.x, pos6.y)
+		surface.DrawLine(pos3.x, pos3.y, pos7.x, pos7.y)
+		surface.DrawLine(pos4.x, pos4.y, pos8.x, pos8.y)
+
+		surface.DrawLine(pos5.x, pos5.y, pos6.x, pos6.y)
+		surface.DrawLine(pos6.x, pos6.y, pos7.x, pos7.y)
+		surface.DrawLine(pos7.x, pos7.y, pos8.x, pos8.y)
+		surface.DrawLine(pos5.x, pos5.y, pos8.x, pos8.y)
+
+end
+
+	if(gBool("Visuals", "ESP", "Health")) then
+      local hp = em.Health(v) * h / 220;
+      if(hp > h) then hp = h; end
+      local diff = h - hp;
+      local hpX = pos.x - w / 2
+      local hpY = pos.y + 4
+      local Width =  w + 2
+      local hpW = diff
+
+      surface.SetDrawColor(0,0,0)
+      surface.DrawRect( hpX-1, hpY, Width, 4 );
+
+      surface.SetDrawColor( ( 100 - em.Health(v) ) * 2.55, em.Health(v) * 2.55, 0, 255);
+      surface.DrawRect( hpX, hpY+1, hp, 2);
+	end
+
+	surface.SetFont("esp");
+
+	surface.SetTextColor(255, 255, 255);
+
+	if(gBool("Visuals", "ESP", "Name")) then
+
+		local tw, th = surface.GetTextSize(pm.Name(v));
+
+		surface.SetTextPos( pos.x - tw / 2, pos.y - h + 2 - th );
+
+		surface.DrawText(pm.Name(v));
+
+	end
+
+	if(gBool("Visuals", "ESP", "Rank")) then
+
+		local w = pm.GetActiveWeapon(v);
+		if(w && em.IsValid(w)) then
+			local tw,  th = surface.GetTextSize(v:GetUserGroup());
+			surface.SetTextPos( pos.x - tw / 2, pos.y - th / 2 + 15 );
+			--surface.DrawText(v:GetUserGroup());
+		local money = pm.getDarkRPVar and pm.getDarkRPVar(v, "money") or nil
+		if money then
+			surface.DrawText("$"..money);
+		end
+		end
+	end
+
+			cam.Start3D()
+				if (gBool("Visuals", "ESP", "Barrel") and v:IsPlayer()) then
+					local hitpos = v:GetEyeTrace().HitPos
+
+					render.DrawLine(GetHeadPos(v), hitpos, GetColor(v))
+					render.DrawWireframeSphere(hitpos, 3, 10, 10, GetColor(v), hitpos)
+				end
+			cam.End3D()
+
+	if(gBool("Visuals", "ESP", "Skeleton")) then
+		local origin = em.GetPos(v);
+		for i = 1, em.GetBoneCount(v) do
+			local parent = em.GetBoneParent(v, i);
+			if(!parent) then continue; end
+			local bonepos, parentpos = em.GetBonePosition(v, i), em.GetBonePosition(v, parent);
+			if(!bonepos || !parentpos || bonepos == origin) then continue; end
+			local bs, ps = vm.ToScreen(bonepos), vm.ToScreen(parentpos);
+			surface.SetDrawColor(GetColor(v));
+			surface.DrawLine(bs.x, bs.y, ps.x, ps.y);
+		end
+		cam.Start3D()
+		render.DrawWireframeSphere(GetHeadPos(v), 2, 50, 50, Color(0, 255, 0, 255), true)
+		cam.End3D()
+	end
+
+end
+
+local aimtarget;
+
+hook.Add("HUDPaint", "", function()
+	draw.SimpleText("em0tion private", "BudgetLabel", 10, 10, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_LEFT)
+	draw.SimpleText(tostring(os.date("%I:%M:%S")), "BudgetLabel", 10, 20, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_LEFT)	surface.SetDrawColor(255,15,15)
+	surface.SetDrawColor(255,15,15)
+	surface.SetDrawColor(255,15,15)
+--[[    surface.DrawLine(ScrW() / 2 - 17, ScrH() / 2, ScrW() / 2 + 17 , ScrH() / 2)
+    surface.DrawLine(ScrW() / 2 - 0, ScrH() / 2 - 17, ScrW() / 2 - 0 , ScrH() / 2 + 17)
+    surface.SetDrawColor(255,255,255)
+  	surface.DrawLine(ScrW() / 2 - 10, ScrH() / 2, ScrW() / 2 + 11 , ScrH() / 2)
+  	surface.DrawLine(ScrW() / 2 - 0, ScrH() / 2 - 10, ScrW() / 2 - 0 , ScrH() / 2 + 11)]]
+	if(gBool("Visuals", "  ", "Enabled")) then
+	if(aimtarget && gBool("Ragebot", "Target", "Snapline")) then
+		if HasHead(aimtarget) then
+		local AimBone = aimtarget:GetBonePosition(aimtarget:LookupBone("ValveBiped.Bip01_Head1"))
+		local lpos = LocalPlayer():GetShootPos()
+		local pos = aimtarget:GetBonePosition(aimtarget:LookupBone("ValveBiped.Bip01_Head1")):ToScreen()
+		surface.SetDrawColor(HSVToColor( RealTime() * 120 % 360, 1, 1 ));
+		surface.DrawLine(ScrW() / 2, ScrH() / 2, pos.x, pos.y);
+		--draw.SimpleText("Target: "..aimtarget:Nick(), "memeyou", ScrW()/2, ScrH()/2 + 20, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+	end
+	end
+	if(!gBool("Visuals", "  ", "Enabled")) then return; end
+	for k,v in next, player.GetAll() do
+		if(!em.IsValid(v) || em.Health(v) < 1 || v == me || em.IsDormant(v)) then continue; end
+		if(!Filter(v)) then continue; end
+		ESP(v);
+	end
+end
+if(gBool("Visuals", "ESP", "Glow (LAG)")) then
+for k,v in next, player.GetAll() do
+	if(v:Health() < 1) then continue; end
+	if(v:IsDormant()) then continue; end
+	if(v:Team() == LocalPlayer():Team()) then
+		halo.Add({v}, Color(0, 255, 0), 2, 2, 1, false, true);
+	else
+		halo.Add({v}, Color(255, 0, 0, 255), 1, 1, 1, true, true);
+	end
+end
+end
+end);
+
+local mats = {};
+  hook.Add("RenderScene", "", function()
+  if(#mats == 0) then
+    for k,v in next, game.GetWorld():GetMaterials() do
+      mats[#mats + 1] = Material(v);
+    end
+  end
+
+  for k,v in next, mats do
+  	if(gBool("Visuals", "ESP", "ASUS")) then
+    v:SetFloat("$alpha", 0.9);
+	else
+	v:SetFloat("$alpha", 1);
+end
+  end
+end);
+
+hook.Add("RenderScreenspaceEffects", "", function()
+	if(!gBool("Visuals", "  ", "Enabled")) then return; end
+	for k,v in next, player.GetAll() do
+		if(!em.IsValid(v) || em.Health(v) < 1 || v == me || em.IsDormant(v)) then continue; end
+		if(!Filter(v)) then continue; end
+		Chams(v);
+	end
+end);
+
+local fa;
+local aa;
+
+local function fasAutowall(wep, startPos, aimPos, ply)
+	if not gBool("Ragebot", "Target", "Auto Wall") then return end
+    local traces = {}
+    local traceResults = {}
+    local dir = (aimPos - startPos):GetNormalized()
+    traces[1] = { start = startPos, filter = me, mask = trace_normal, endpos = aimPos, }
+    traceResults[1] = util.TraceLine(traces[1])
+    if(NoPenetration[traceResults[1].MatType]) then return false end
+    if(-dir:DotProduct(traceResults[1].HitNormal) <= .26) then return false end
+
+    traces[2] = { start = traceResults[1].HitPos, endpos = traceResults[1].HitPos + dir * wep.PenStr * (PenMod[traceResults[1].MatType] or 1) * wep.PenMod, filter = me, mask = trace_walls, }
+    traceResults[2] = util.TraceLine(traces[2])
+    traces[3] = { start = traceResults[2].HitPos, endpos = traceResults[2].HitPos + dir * .1, filter = me, mask = trace_normal, }
+    traceResults [3] = util.TraceLine(traces[3])
+    traces[4] = { start = traceResults[2].HitPos, endpos = aimPos, filter = me, mask = MASK_SHOT, }
+    traceResults[4] = util.TraceLine(traces[4])
+    if(traceResults[4].Entity ~= ply) then return false end
+    return(not traceResults[3].Hit)
+end
+
+local function m9kAutowall(wep)
+	if not gBool("Ragebot", "Target", "Auto Wall") then return end
+	local wep = me:GetActiveWeapon()
+    local trace = {
+        endpos = aimPos,
+        start = me:EyePos(),
+        mask = MASK_SHOT,
+        filter = me,
+    }
+    return wep:BulletPenetrate(10, nil, util.TraceLine(trace), DamageInfo())
+end
+
+local function FixMovement(pCmd)
+	local vec = Vector(cm.GetForwardMove(pCmd), cm.GetSideMove(pCmd), 0)
+	local vel = math.sqrt(vec.x*vec.x + vec.y*vec.y)
+	local mang = vm.Angle(vec)
+	local yaw = cm.GetViewAngles(pCmd).y - fa.y + mang.y
+	if (((cm.GetViewAngles(pCmd).p+90)%360) > 180) then
+	yaw = 180 - yaw
+	end
+	yaw = ((yaw + 180)%360)-180
+	pCmd:SetForwardMove(math.cos(math.rad(yaw)) * vel)
+	pCmd:SetSideMove(math.sin(math.rad(yaw)) * vel)
+end
+
+local function Clamp(val, min, max)
+	if(val < min) then
+		return min;
+	elseif(val > max) then
+		return max;
+	end
+	return val;
+end
+
+local table = Copy(table);
+local dists = {};
+
+local function GetPos(v)
+
+	if(gBool("Ragebot", "Target", "Bodyaim")) then return( em.LocalToWorld(v, em.OBBCenter(v)) ); end
+
+	local eyes = em.LookupAttachment(v, "eyes");
+
+	if(!eyes) then return( em.LocalToWorld(v, em.OBBCenter(v)) ); end
+
+	local pos = em.GetAttachment(v, eyes);
+
+	if(!pos) then return( em.LocalToWorld(v, em.OBBCenter(v)) ); end
+
+	return(pos.Pos);
+end
+
+local aimignore;
+
+local function Valid(v)
+	if(!v || !em.IsValid(v) || v == me || em.Health(v) < 1 || em.IsDormant(v) || pm.Team(v) == 1002 || (v == aimignore && gOption("Ragebot", "Target", "Selection") == "Nextshot")) then return false; end
+	if(gBool("Ragebot", "Target", "Ignore Bots")) then
+		if(pm.IsBot(v)) then return false; end
+	end
+	if(gBool("Ragebot", "Target", "Ignore Team")) then
+		if(pm.Team(v) == pm.Team(me)) then return false; end
+	end
+	if(gBool("Ragebot", "Target", "Ignore Friends")) then
+		if(pm.GetFriendStatus(v) == "friend") then return false; end
+	end
+	local tr = {
+		start = em.EyePos(me),
+		endpos = GetPos(v),
+		mask = MASK_SHOT,
+		filter = {me, v},
+	};
+	if(util.TraceLine(tr).Fraction == 1) then
+			return true
+	elseif(wep and wep:IsValid() and wep.PenStr) then
+			return fasAutowall(wep, tr.start, tr.endpos, v)
+elseif (wep and wep:IsValid() and wep.BulletPenetrate) then
+	return m9kAutowall(wep, tr.start, tr.endpos, v)
+	end
+	return false
+end
+
+local function gettarget()
+
+	local opt = gOption("Ragebot", "Target", "Selection");
+
+	local sticky = gOption("Ragebot", "Ragebot", "Non-Sticky");
+
+	if(opt == "Distance") then
+
+		if( !sticky && Valid(aimtarget) ) then return; end
+
+		dists = {};
+
+		for k,v in next, player.GetAll() do
+			if(!Valid(v)) then continue; end
+			dists[#dists + 1] = { vm.Distance( em.GetPos(v), em.GetPos(me) ), v };
+		end
+
+		table.sort(dists, function(a, b)
+			return(a[1] < b[1]);
+		end);
+
+		aimtarget = dists[1] && dists[1][2] || nil;
+
+	elseif(opt == "Health") then
+
+		if( !sticky && Valid(aimtarget) ) then return; end
+
+		dists = {};
+
+		for k,v in next, player.GetAll() do
+			if(!Valid(v)) then continue; end
+			dists[#dists + 1] = { em.Health(v), v };
+		end
+
+		table.sort(dists, function(a, b)
+			return(a[1] < b[1]);
+		end);
+
+		aimtarget = dists[1] && dists[1][2] || nil;
+
+	elseif(opt == "Nextshot") then
+		if( !sticky && Valid(aimtarget) ) then return; end
+		aimtarget = nil;
+		local allplys = player.GetAll();
+		local avaib = {};
+		for k,v in next,allplys do
+			avaib[math.random(100)] = v;
+		end
+
+		for k,v in next, avaib do
+			if(Valid(v)) then
+				aimtarget = v;
+			end
+		end
+
+	elseif(opt == "Crosshair") then
+		if( !sticky && Valid(aimtarget) ) then return; end
+		aimtarget = nil;
+		local allplys = player.GetAll();
+				local plyDist = 100000
+				for i = 1, #allplys do
+						v = allplys[i]
+			if v:Alive() && v != LocalPlayer() && Valid(v) then
+						local plyDist2 = LocalPlayer():GetEyeTrace().HitPos:Distance(v:GetPos())
+						if plyDist2 < plyDist then
+								plyDist = plyDist2
+								aimtarget = v
+				end
+			end
+		end
+	end
+end
+
+
+local cones = {};
+
+local pcall = pcall;
+local require = require;
+
+local nullvec = Vector() * -1;
+
+local IsFirstTimePredicted = IsFirstTimePredicted;
+local CurTime = CurTime;
+local servertime=0;
+local bit = Copy(bit);
+//require("dickwrap");
+//require("ChatClear");
+
+hook.Add("Move", "", function()
+	if(!IsFirstTimePredicted()) then return; end
+	servertime = CurTime();
+end);
+
+
+GAMEMODE["EntityFireBullets"] = function(self, p, data)
+	aimignore = aimtarget;
+	local w = pm.GetActiveWeapon(me);
+	local Spread = data.Spread * -1;
+	if(!w || !em.IsValid(w) || cones[em.GetClass(w)] == Spread || Spread == nullvec) then return; end
+	cones[em.GetClass(w)] = Spread;
+end
+
+local function PredictSpread(ucmd, ang)
+	local w = pm.GetActiveWeapon(me);
+	if(!w || !em.IsValid(w) || !cones[em.GetClass(w)] || !gBool("Ragebot", "Accuracy", "Anti Spread")) then return am.Forward(ang); end
+	return(dickwrap.Predict(ucmd, am.Forward(ang), cones[em.GetClass(w)]));
+end
+
+local function GetAngle(ang)
+	if !ang then return; end
+	if(!gBool("Ragebot", "Accuracy", "Anti Recoil")) then return ang + pm.GetPunchAngle(me); end
+	return ang;
+end
+
+local function NormalizeAngle(ang)
+	ang.x = math.NormalizeAngle(ang.x);
+	ang.p = math.Clamp(ang.p, -89, 89);
+end
+
+local function meme(ucmd)
+	if(!fa) then fa = cm.GetViewAngles(ucmd); end
+	fa = fa + Angle(cm.GetMouseY(ucmd) * .023, cm.GetMouseX(ucmd) * -.023, 0);
+	NormalizeAngle(fa);
+	if(cm.CommandNumber(ucmd) == 0) then
+		cm.SetViewAngles(ucmd, GetAngle(fa));
+		return;
+	end
+	if(cm.KeyDown(ucmd, 1)) then
+		local ang = GetAngle(vm.Angle( PredictSpread(ucmd, fa ) ) );
+		NormalizeAngle(ang);
+		cm.SetViewAngles(ucmd, ang);
+	end
+end
+
+local function Autofire(ucmd)
+	if(pm.KeyDown(me, 1) && gBool("Ragebot", "Ragebot", "Auto Pistol")) then
+		cm.SetButtons(ucmd, bit.band( cm.GetButtons(ucmd), bit.bnot( 1 ) ) );
+	else
+		cm.SetButtons(ucmd, bit.bor( cm.GetButtons(ucmd), 1 ) );
+	end
+end
+
+local function WeaponCanFire()
+	local w = pm.GetActiveWeapon(me);
+	if(!w || !em.IsValid(w) || !gBool("Ragebot", "Ragebot", "Bullettime")) then return true; end
+	return( servertime >= wm.GetNextPrimaryFire(w) );
+end
+
+local function WeaponShootable()
+    local wep = pm.GetActiveWeapon(me);
+    if( em.IsValid(wep) ) then
+	     local n = string.lower(wep:GetPrintName())
+	     if( wep:Clip1() <= 0 ) then
+		    return false;
+		 end
+
+
+
+		 if( string.find(n,"knife") or string.find(n,"grenade") or string.find(n,"sword") or string.find(n,"bomb") or string.find(n,"ied") or string.find(n,"c4") or string.find(n,"slam") or string.find(n,"climb") or string.find(n,"hand") or string.find(n,"fist") ) then
+		    return false;
+		 end
+
+
+		  return true;
+	end
+end
+
+local function PredictPos(pos)
+local myvel = LocalPlayer():GetVelocity()
+local pos = pos - (myvel * engine.TickInterval());
+return pos;
+end
+
+
+local function aimer(ucmd)
+	if(cm.CommandNumber(ucmd) == 0 || !gBool("Ragebot", "Ragebot", "Enabled")) then return; end
+	gettarget();
+	aa = false;
+	if(aimtarget && (input.IsKeyDown(KEY_LALT) || gBool("Ragebot", "Ragebot", "Autosnap")) && WeaponCanFire() && WeaponShootable() ) then
+		aa = true;
+		local pos = GetPos(aimtarget) - em.EyePos(me);
+		PredictPos(pos);
+		local ang = vm.Angle( PredictSpread(ucmd, vm.Angle(pos)));
+		NormalizeAngle(ang);
+		cm.SetViewAngles(ucmd, ang);
+		if(gBool("Ragebot", "Ragebot", "Autofire")) then
+			Autofire(ucmd);
+		end
+		if(gBool("Ragebot", "Ragebot", "Silent")) then
+			FixMovement(ucmd);
+		else
+			fa = ang;
+		end
+	end
+end
+
+
+local toggler = 0
+local function RapidFire(pCmd)
+	if(gBool("Ragebot", "Ragebot", "Rapid Fire")) then
+		if me:KeyDown(IN_ATTACK) then
+			if me:Health() > 0 then
+				if IsValid(me:GetActiveWeapon()) and me:GetActiveWeapon():GetClass() ~= "weapon_physgun" then
+					if toggler == 0 then
+						pCmd:SetButtons(bit.bor(pCmd:GetButtons(), IN_ATTACK))
+						toggler = 1
+					else
+						pCmd:SetButtons(bit.band(pCmd:GetButtons(), bit.bnot(IN_ATTACK)))
+						toggler = 0
+					end
+				end
+			end
+		end
+	end
+end
+
+local function GetClosest()
+	local ddists = {};
+
+	local closest;
+
+	for k,v in next, player.GetAll() do
+	if(!Valid(v)) then continue; end
+		ddists[#ddists + 1] = { vm.Distance( em.GetPos(v), em.GetPos(me) ), v };
+	end
+
+	table.sort(ddists, function(a, b)
+		return(a[1] < b[1]);
+	end);
+
+	closest = ddists[1] && ddists[1][2] || nil;
+
+	if(!closest) then return fa.y; end
+
+	local pos = em.GetPos(closest);
+
+	local pos = vm.Angle(pos - em.EyePos(me));
+
+	return( pos.y );
+end
+
+local ox=-181;
+local oy=0;
+
+local function RandCoin()
+	local randcoin = math.random(0,1);
+	if(randcoin == 1) then return 1; else return -1; end
+end
+
+local function GetX()
+	local opt = gOption("Ragebot", "Anti-Aim", "Pitch");
+	if(opt == "Emotion") then
+		local randcoin = gInt("Ragebot", "Anti-Aim", "Emotion Randomcoin X");
+		if( math.random(100) < randcoin ) then
+			ox = RandCoin() * 181;
+		end
+	elseif( opt == "Up" ) then
+		ox = 181;
+	elseif( opt == "Down" ) then
+		ox = 89;
+	elseif( opt == "Fake down" ) then
+		ox = -181.23412;
+	elseif( opt == "Random") then
+		ox = math.random("0", "90", "180", "360");
+	elseif(opt == "Jitter") then
+		ox = ox * -1;
+  elseif(opt == "HitMyHead") then
+		ox = math.sin(RealTime() * gInt("Ragebot", "Anti-Aim", "Sui Speed")) * gInt("Ragebot", "Anti-Aim", "Sui Depth") * 2;
+	elseif(opt == "Inf") then
+		ox = ox % fa.y * 100;
+	elseif(opt == "None") then
+		ox = fa.x;
+		end
+end
+
+local spin = 0;
+
+local function GetY()
+  spin = spin + 8.0
+  if spin >= 360 then
+    spin = 0
+  end
+
+	local opt = gOption("Ragebot", "Anti-Aim", "Yaw");
+	if(opt == "Emotion") then
+		local randcoin = gInt("Ragebot", "Anti-Aim", "Emotion Randomcoin Y");
+		if( math.random(100) < randcoin ) then
+			oy = fa.y + math.random(-180, 180);
+		end
+	elseif( opt == "None" ) then
+		oy = fa.y;
+	elseif( opt == "Sideways" ) then
+		oy = fa.y - 90;
+	elseif(opt == "Jitter") then
+		oy = fa.y + math.random(-90, 90);
+	elseif(opt == "TJitter") then
+		oy = fa.y - 180 + math.random(-90, 90);
+	elseif(opt == "Static") then
+		oy = 0;
+	elseif(opt == "Backwards") then
+		oy = fa.y - 180;
+	elseif(opt == "Towards") then
+		oy = GetClosest();
+	elseif(opt == "BTowards") then
+		oy = GetClosest() + 181;
+	elseif(opt == "BTowards Jitter") then
+	oy = GetClosest() + 181 + math.random(-30, 30);
+  elseif(opt == "Slow Spin") then
+  oy = RealTime() % 50 * 7 * 100
+  elseif(opt == "Fast Spin") then
+  oy = RealTime() % 50 * 50 * 100
+	elseif(opt == "Smooth Jitter") then
+	oy = fa.y - 180 + math.sin(RealTime() * gInt("Ragebot", "Anti-Aim", "SJ Speed")) * gInt("Ragebot", "Anti-Aim", "SJ Depth");
+	elseif(opt == "SJ Towards") then
+	oy = 180 + GetClosest() + math.sin(RealTime() * gInt("Ragebot", "Anti-Aim", "SJ Speed")) * gInt("Ragebot", "Anti-Aim", "SJ Depth");
+	end
+end
+
+local function walldetect()
+	local eye = em.EyePos(me);
+	local tr = util.TraceLine({
+		start = eye,
+		endpos = (eye + (am.Forward(fa) * 10)),
+		mask = MASK_ALL,
+	});
+end
+
+local function antiaimer(ucmd)
+	if( (cm.CommandNumber(ucmd) == 0 && !gBool("Visuals", "Misc", "Thirdperson")) || cm.KeyDown(ucmd, 1) || cm.KeyDown(ucmd, 32) || aa || !gBool("Ragebot", "Anti-Aim", "Enabled")) then return; end
+	GetX();
+	GetY();
+	walldetect();
+	local aaang = Angle(ox, oy, 0);
+	cm.SetViewAngles(ucmd, aaang);
+	FixMovement(ucmd, true);
+end
+
+local function GetAngle(ang)
+	if !ang then return; end
+	if(!gBool("Ragebot", "Accuracy", "Anti Recoil")) then return ang + pm.GetPunchAngle(me); end
+	return ang;
+end
+
+local function rapidfire(ucmd)
+	if(pm.KeyDown(me, 1) && gBool("Ragebot", "Ragebot", "Auto Pistol")) then
+		cm.SetButtons(ucmd, bit.band( cm.GetButtons(ucmd), bit.bnot( 1 ) ) );
+	end
+end
+
+hook.Add( "HUDPaint", "mirror", function( )
+	if(gBool("Visuals", "Misc", "Mirror")) then
+        local cam = {}
+        local ang = fa
+        cam.angles = Angle(0, ang.y - 180, ang.r)
+        cam.origin = LocalPlayer():GetShootPos()
+        cam.x, cam.y, cam.w, cam.h = ScrW() - 305, 5, 300, 200
+        cam.drawviewmodel = false
+        render.RenderView( cam )
+        draw.RoundedBox(1, (ScrW()/2), (ScrH() / 2) - 1.5, 3, 3, Color(255,255,255,255))
+    end
+end )
+
+local function Triggerbot(ucmd)
+	if(gBool("Legitbot", "  ", "Enabled")) then
+	if (!gBool("Legitbot", "Triggerbot", "Enabled")) then return; end
+	if (!input.IsMouseDown(MOUSE_MIDDLE) && gBool("Legitbot", "Triggerbot", "On key")) then return; end
+	local tr = pm.GetEyeTrace(me);
+	if (!em.IsValid(tr.Entity) || !tr.Entity:IsPlayer() || em.Health(tr.Entity) < 0 || em.IsDormant(tr.Entity)) then return; end
+	if (!gBool("Legitbot", "Triggerbot", "Target Friends") && pm.GetFriendStatus(tr.Entity) == "friend") then return; end
+	if (!gBool("Legitbot", "Triggerbot", "Target Team") && pm.Team(me) == pm.Team(tr.Entity)) then return; end
+	cm.SetButtons(ucmd, bit.bor(cm.GetButtons(ucmd), 1));
+end
+end
+
+local function AutoHop(ucmd)
+if !gBool("Misc", "Bunny Hop", "BunnyHop") then return end
+if(!me:IsOnGround() && ucmd:KeyDown(IN_JUMP) && !me:IsTyping()) then
+	ucmd:RemoveKey(IN_JUMP);
+	if gBool("Misc", "Bunny Hop", "AutoStrafe") then
+		if(ucmd:GetMouseX() > 1 || ucmd:GetMouseX() < -1) then
+			ucmd:SetSideMove(ucmd:GetMouseX() > 1 && 400 || -400);
+		else
+			ucmd:SetForwardMove(5850 / me:GetVelocity():Length2D());
+			ucmd:SetSideMove((ucmd:CommandNumber() % 2 == 0) && -400 || 400);
+		end
+	end
+elseif(ucmd:KeyDown(IN_JUMP) && gBool("Misc", "Bunny Hop", "AutoStrafe")) then
+	ucmd:SetForwardMove(10000);
+end
+
+end
+
+hook.Add("CreateMove", "", function(ucmd)
+	meme(ucmd);
+	if(gBool("Ragebot", "  ", "Enabled")) then
+	aimer(ucmd);
+	antiaimer(ucmd);
+	end
+	Triggerbot(ucmd);
+	AutoHop(ucmd)
+	if(gBool("Ragebot", "Accuracy", "Auto Duck")) then
+		if me:KeyDown(IN_ATTACK) or me:KeyDown(IN_DUCK) then
+			ucmd:SetButtons(bit.bor(ucmd:GetButtons(), IN_DUCK))
+		else
+			ucmd:SetButtons(bit.band(ucmd:GetButtons(), bit.bnot(IN_DUCK)))
+		end
+	end
+end);
+
+hook.Add("CalcView", "", function(p, o, a, f)
+	return({
+		angles = GetAngle(fa),
+		origin = (gBool("Visuals", "Misc", "Thirdperson") && o + am.Forward(fa) * -150 || o),
+		fov = gInt("Visuals", "Misc", "Fov"),
+	});
+end);
+
+hook.Add("ShouldDrawLocalPlayer", "", function()
+	return(gBool("Visuals", "Misc", "Thirdperson"));
+end);
+
+local function chet()
+	local randply = player.GetAll()[math.random(#player.GetAll())]
+	local opt = gOption("Misc", "Chatspam", "Mode");
+if(gBool("Misc", "Chatspam", "Enabled")) then
+if( opt == "Normal" ) then
+	RunConsoleCommand("say", msgs1[math.random(#msgs1)])
+elseif(opt == "Advertise") then
+RunConsoleCommand("say", msgs2[math.random(#msgs2)])
+elseif(opt == "Aimware") then
+RunConsoleCommand("say", msgs3[math.random(#msgs3)])
+elseif(opt == "OOC") then
+RunConsoleCommand("say", msgs4[math.random(#msgs4)])
+elseif(opt == "Fake IP") then
+if (randply == me) then return end
+RunConsoleCommand("say", "IP RESOLVED: "..randply:Nick().." -- "..math.Round(math.Rand(5, 255)).."."..math.Round(math.Rand(27, 255)).."."..math.Round(math.Rand(10, 100)).."."..math.Round(math.Rand(10, 205)))
+elseif(opt == "Bar") then
+RunConsoleCommand("say", "¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦¦")
+elseif(opt == "Clear") then
+ChatClear.OOC()
+		end
+	end
+end
+timer.Create("chatspam___r", 0.1 ,0,chet)
+
+local twep = { "weapon_ttt_c4", "weapon_ttt_knife", "weapon_ttt_phammer", "weapon_ttt_sipistol", "weapon_ttt_flaregun", "weapon_ttt_push", "weapon_ttt_radio", "weapon_ttt_teleport", "(Disguise)" ,"spiderman's_swep", "weapon_ttt_trait_defilibrator", "weapon_ttt_xbow", "weapon_ttt_dhook", "weapon_awp", "weapon_jihadbomb", "weapon_ttt_knife", "weapon_ttt_c4", "weapon_ttt_decoy", "weapon_ttt_flaregun", "weapon_ttt_phammer", "weapon_ttt_push", "weapon_ttt_radio", "weapon_ttt_sipistol", "weapon_ttt_teleport", "weapon_ttt_awp", "weapon_ttt_silencedsniper", "weapon_ttt_turtlenade", "weapon_ttt_death_station", "weapon_ttt_sg552", "weapon_ttt_tripmine"}
+
+for _,v in pairs(player.GetAll()) do
+        v.HatTraitor = nil
+end
+for _,v in pairs(ents.GetAll()) do
+        v.HatESPTracked = nil
+end
+
+
+hasfoundt = false
+
+gameevent.Listen("player_spawn")
+hook.Add("player_spawn", "hasfoundtlisten", function( data )
+hasfoundt = false
+end)
+
+hook.Add("Think", "tdetector", function()
+	for _, ent in pairs( ents.GetAll() ) do
+	if ( ent:IsWeapon() and ent.CanBuy and IsValid( ent:GetOwner() ) and ent:GetOwner():IsPlayer() ) then
+		local owner = ent:GetOwner();
+		if !hasfoundt then
+		chat.AddText(Color(0, 182, 255), "[em0tion] ",Color(255, 0, 0), owner:Nick(),Color(255, 255, 255), " has been detected as a ",Color(255, 0, 0), "TRAITOR!")
+		hasfoundt = true
+		end
+	end
+end
+end)
+
+if MOTDgd or MOTDGD then
+function MOTDgd.GetIfSkip()
+	if(gBool("Misc", "Bypasses", "Block ads")) then
+		chat.AddText(Color(0, 182, 255), "[em0tion] ",Color(255, 255, 255), "Blocked ad.")
+		return true
+		end
+	end
+end
+
+gameevent.Listen("entity_killed");
+local function entity_killed(info)
+	local killer = Entity(info.entindex_attacker);
+	local killed = Entity(info.entindex_killed);
+  local opt = gOption("Misc", "Chatspam", "KS Mode");
+  if(gBool("Misc", "Chatspam", "Killspam")) then
+  if(!em.IsValid(killer) || !em.IsValid(killed) || killer != me || killer == killed || !killed:IsPlayer()) then
+		return;
+	end
+if( opt == "Owned" ) then
+	RunConsoleCommand("say", killed:GetName().." was owned.")
+elseif( opt == "Killed by" ) then
+	RunConsoleCommand("say", killed:GetName().." was killed by "..me:Nick())
+elseif(opt == "Advertise") then
+RunConsoleCommand("say", "Destroyed by em0tion!")
+elseif(opt == "HvH") then
+RunConsoleCommand("say", "Hey "..killed:GetName()..", you should get a better cheat.")
+elseif(opt == "em0tion.xyz") then
+RunConsoleCommand("say", "em0tion - Best memeware paste!")
+end
+end
+end
+hook.Add("entity_killed", "", entity_killed);
+---------------------------------------------
+local names1 = { -- inspired by lennys scripts (yes really)
+  "gnihsaw",     -- the point is to have a hard to spell name, while not making it complete gibberish.
+  "oitar",       -- also a WIP feature.
+  "evrac",
+  "nrocpop",
+  "narhet",
+  "hcanips",
+  "relggaw",
+  "reggum",
+  "yb",       	 -- Here's a fun fact: These are all real words and names, but reversed.
+  "golb",
+  "revir",
+  "flehs",
+  "yldaed",
+  "retlaf",
+  "allod",
+  "rekcins",
+  "elitref",
+  "ecap",
+  "regnig",
+  "yeltub",
+  "suht",
+  "di",
+  "rotceles",
+  "otnip",
+  "ytilauqe"
+}
+
+local names2 = {
+	"desoppo",
+	"radyla",
+	"sedom",
+	"lacsar",
+	"gniraeh",
+	"yelgnal",
+	"daerbregnig",
+	"tnanimod",
+	"rotcarfer",
+	"sucinrepoc",
+	"nraw",
+	"suorogiv",
+	"eldi",
+	"larur",
+	"derrefer",
+	"attecnap",
+	"etoinma",
+	"retroper",
+	"kaep",
+	"ymaerc",
+	"anetac",
+	"detullop",
+	"ygetarts",
+	"wollefgnol",
+	"acnalbasac"
+}
+
+function RainbowPrint(mult, ints, text)
+	local text = string.Explode("\n", text)
+	local tabs = {}
+
+	for n = 1, #text do
+		local tab = {}
+
+		for i = 1, string.len(text[n]) do
+			local c = HSVToColor(i * mult % 360, ints, 1)
+			local letter = string.sub(text[n], i, i)
+
+			table.insert(tab, c)
+			table.insert(tab, letter)
+		end
+
+		table.insert(tab, "\n")
+		table.insert(tabs, tab)
+	end
+
+	for _, tab in pairs(tabs) do
+		MsgC(unpack(tab))
+	end
+end
+
+  hook.Add("PreDrawViewModel", "45245245", function()
+    rainbow = {}
+    rainbow.R = math.sin(CurTime() * 4) * 127 + 128
+    rainbow.G = math.sin(CurTime() * 4 + 2) * 127 + 128
+    rainbow.B = math.sin(CurTime() * 4 + 4) * 127 + 128
+    if(gBool("Visuals", "Misc", "Rainbow viewmodel")) then
+      render.MaterialOverride(Material("models/debug/debugwhite"))
+      render.SetColorModulation(rainbow.R/255, rainbow.G/255, rainbow.B/255);
+  	end
+  end);
+
+
+for i = 1, 300 do print(" ") end
+MsgC(Color(255, 255, 255), "em0tion beta\nMade by houseofpain.\n")
+chat.AddText(Color(0, 182, 255), "[em0tion] ",Color(255, 255, 255), "Loaded successfully.")
+loadconfig()
