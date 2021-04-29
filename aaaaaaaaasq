@@ -4,14 +4,14 @@
 
 function SayTTS(msg)
 sound.PlayURL("http://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&q="..msg.."&tl=en", "mono", function(chan, num, str)	end )
-MsgC(Color(0, 182, 255), "[em0tionTTS] ",Color(255, 255, 255), "Ran message \""..msg.."\".")
+MsgC(Color(0, 182, 255), "[interventionTTS] ",Color(255, 255, 255), "Ran message \""..msg.."\".")
 end
 
 if (_G.QAC) then
-chat.AddText(Color(0, 182, 255), "[em0tion] ",Color(255, 0, 0), "Quack Anti-cheat detected. ",Color(255, 255, 255), "it'll be best to bail ASAP, but you're mostly protected.")
+chat.AddText(Color(0, 182, 255), "[intervention.lost] ",Color(255, 0, 0), "Quack Anti-cheat detected. ",Color(255, 255, 255), "it'll be best to bail ASAP, but you're mostly protected.")
 end
 if (_G.CAC) then
-chat.AddText(Color(0, 182, 255), "[em0tion] ",Color(255, 0, 0), "Cake Anti-cheat detected. ",Color(255, 255, 255), "disconnecting in hopes to avoid ban, sorry.")
+chat.AddText(Color(0, 182, 255), "[intervention.lost] ",Color(255, 0, 0), "Cake Anti-cheat detected. ",Color(255, 255, 255), "disconnecting in hopes to avoid ban, sorry.")
 LocalPlayer():ConCommand("disconnect")
 end
 
@@ -30,18 +30,18 @@ end
 
 hook.Add("Think", "ulx_detour_blind", function() -- credit to crazyzultan on gmodcheats.
     if (HookExist("HUDPaint", "ulx_blind")) then
-    chat.AddText(Color(0, 182, 255), "[em0tion] ",Color(255, 0, 0), "Blocked ",Color(255, 255, 255), "blinding attempt")
+    chat.AddText(Color(0, 182, 255), "[intervention.lost] ",Color(255, 0, 0), "Blocked ",Color(255, 255, 255), "blinding attempt")
     hook.Remove("HUDPaint", "ulx_blind")
 end
 end)
 
 render.Capture = function( ... ) -- taken from some old cheat I found on mpgh. Added it cause why not
-    chat.AddText(Color(0, 182, 255), "[em0tion] ",Color(255, 255, 255), "Blocked ",Color(255, 0, 0), "render.Capture() ",Color(255, 255, 255), "from being run.")
+    chat.AddText(Color(0, 182, 255), "[intervention.lost] ",Color(255, 255, 255), "Blocked ",Color(255, 0, 0), "render.Capture() ",Color(255, 255, 255), "from being run.")
     return "no."
 end
 
 render.CapturePixels = function( ... )
-		chat.AddText(Color(0, 182, 255), "[em0tion] ",Color(255, 255, 255), "Blocked ",Color(255, 0, 0), "render.CapturePixels() ",Color(255, 255, 255), "from being run.")
+		chat.AddText(Color(0, 182, 255), "[intervention.lost] ",Color(255, 255, 255), "Blocked ",Color(255, 0, 0), "render.CapturePixels() ",Color(255, 255, 255), "from being run.")
 		return "no."
 end
 
@@ -65,7 +65,7 @@ end
 
 function net.Start(str)
 	if str == "screengrab_start" then
-		chat.AddText(Color(0, 182, 255), "[em0tion] ",Color(255, 0, 0), "Blocked ",Color(255, 255, 255), "screengrab attempt.")
+		chat.AddText(Color(0, 182, 255), "[intervention.lost] ",Color(255, 0, 0), "Blocked ",Color(255, 255, 255), "screengrab attempt.")
 		return
 	end
 end
@@ -145,7 +145,7 @@ local msgs1 = {
 }
 
 local msgs2 = { -- so original.
-	"em0tion.xyz"
+	"intervention.lost"
 }
 
 local msgs3 = {
@@ -153,7 +153,7 @@ local msgs3 = {
 }
 
 local msgs4 = {
-	"// em0tion.xyz"
+	"// intervention.lost"
 }
 
 local options = {
@@ -250,11 +250,11 @@ local options = {
 			{"Custom cursor", "Checkbox", true, 0},
 			{"Experimental background", "Checkbox", false, 0},
 			{"Slide", "Checkbox", false, 0},
-			{"Skin", "Selection", "em0tion beta", {"Aimware", "NeverVAC", "em0tion beta"}, 88},
+			{"Skin", "Selection", "intervention.lost 1.0", {"Aimware", "NeverVAC", "intervention.lost 1.0"}, 88},
 		},
 		{ -- here in case I decide to release it.
 			{"Changelog", 540, 20, 400, 305, 130},
-			{"Changed the \"em0tion beta\" skin.", "Checkbox", false, 999},
+			{"Changed the \"intervention.lost 1.0\" skin.", "Checkbox", false, 999},
 		},
 
 	},
@@ -269,7 +269,7 @@ local options = {
 			{"Enabled", "Checkbox", false, 0},
 			{"Mode", "Selection", "Normal", {"Normal", "Fake IP", "Advertise", "Bar", "Aimware", "OOC", "Clear"}, 88},
      		{"Killspam", "Checkbox", false, 0},
-     		{"KS Mode", "Selection", "Owned", {"Owned", "Killed by", "Advertise", "HvH", "em0tion.xyz"}, 88},
+     		{"KS Mode", "Selection", "Owned", {"Owned", "Killed by", "Advertise", "HvH", "intervention.lost"}, 88},
 		},
 		{
 			{"TTT", 280, 20, 250, 115, 130},
@@ -283,11 +283,13 @@ local options = {
 		},
 		{
 			{"Exploits", 20, 280, 250, 115, 130},
-			{"Coming soon", "Checkbox", false, 9999},
+			{"DoubleTap", "Checkbox", false, 0},
+			{"AA Direction", "Checkbox", false, 0},
+			{"Slow Walk", "Checkbox", false, 0},
 		},
 		--[[{ -- here in case I decide to release it.
 			{"Changelog", 540, 20, 400, 305, 130},
-			{"Changed the \"em0tion\" skin.", "Checkbox", false, 999},
+			{"Changed the \"intervention.lost\" skin.", "Checkbox", false, 999},
 		},]]
 	},
 		["Colors"] = {
@@ -375,8 +377,8 @@ local function updatevar( men, sub, lookup, new )
 end
 
 local function loadconfig()
-	if(!file.Exists("em0tioncfg.txt", "DATA")) then return; end
-	local tab = util.JSONToTable( file.Read("em0tioncfg.txt", "DATA") );
+	if(!file.Exists("intvcfg.txt", "DATA")) then return; end
+	local tab = util.JSONToTable( file.Read("intvcfg.txt", "DATA") );
 	local cursub;
 	for k,v in next, tab do
 		if(!options[k]) then continue; end
@@ -390,7 +392,7 @@ local function loadconfig()
 end
 
 local function saveconfig()
-	file.Write("em0tioncfg.txt", util.TableToJSON(options));
+	file.Write("intvcfg.txt", util.TableToJSON(options));
 end
 
 local function gBool(men, sub, lookup)
@@ -462,18 +464,18 @@ local function DrawBackground(w, h)
 
 	surface.SetFont("memeyou");
 
-	local tw, th = surface.GetTextSize("em0tion.xyz");
+	local tw, th = surface.GetTextSize("intervention.lost");
 
 	surface.SetTextPos(5, 15 - th / 2);
 
 	surface.SetTextColor(255, 255, 255);
 
-	surface.DrawText("em0tion.xyz");
+	surface.DrawText("intervention.lost");
 
 	surface.DrawRect(0, 31, 5, h - 31);
 	surface.DrawRect(0, h - 5, w, h);
 	surface.DrawRect(w - 5, 31, 5, h);
-elseif(gOption("Settings", "Misc", "Skin") == "em0tion beta") then
+elseif(gOption("Settings", "Misc", "Skin") == "intervention.lost 1.0") then
 
 	surface.SetDrawColor(35, 35, 35, 255);
 	if(gBool("Settings", "Misc", "Transparent mode")) then surface.SetDrawColor(35, 35, 35, 235) end
@@ -498,13 +500,13 @@ elseif(gOption("Settings", "Misc", "Skin") == "em0tion beta") then
 
 	surface.SetFont("memeyou");
 
-	local tw, th = surface.GetTextSize("em0tion.xyz");
+	local tw, th = surface.GetTextSize("intervention.lost");
 
 	surface.SetTextPos(5, 15 - th / 2);
 
 	surface.SetTextColor(255, 255, 255, 255);
 
-	surface.DrawText("em0tion.xyz");
+	surface.DrawText("intervention.lost");
 
 --[[	surface.DrawRect(0, 67, 5, h - 67);
 	surface.DrawRect(0, h - 5, w, h);
@@ -526,13 +528,13 @@ elseif(gOption("Settings", "Misc", "Skin") == "em0tion beta") then
 
 	surface.SetFont("memeyou");
 
-	local tw, th = surface.GetTextSize("em0tion.xyz");
+	local tw, th = surface.GetTextSize("intervention.lost");
 
 	surface.SetTextPos(5, 15 - th / 2);
 
 	surface.SetTextColor(255, 255, 255);
 
-	surface.DrawText("em0tion.xyz");
+	surface.DrawText("intervention.lost");
 
 	surface.DrawRect(0, 31, 5, h - 31);
 	surface.DrawRect(0, h - 5, w, h);
@@ -590,7 +592,7 @@ if(gOption("Settings", "Misc", "Skin") == "NeverVAC") then
 		surface.DrawText(v);
 		maxx = maxx + sizeper;
 	end
-elseif(gOption("Settings", "Misc", "Skin") == "em0tion beta") then
+elseif(gOption("Settings", "Misc", "Skin") == "intervention.lost 1.0") then
 	local mx, my = self:GetPos();
 
 	local sizeper = (w - 11) / #order;
@@ -725,7 +727,7 @@ local function DrawCheckbox(self, w, h, var, maxy, posx, posy, dist)
 		var[3] = !var[3];
 	end
 
-	elseif(gOption("Settings", "Misc", "Skin") == "em0tion beta") then
+	elseif(gOption("Settings", "Misc", "Skin") == "intervention.lost 1.0") then
 	surface.SetFont("memeyou2");
 	surface.SetTextColor(gInt("Colors", "Menu Color", "Menu R"), gInt("Colors", "Menu Color", "Menu G"), gInt("Colors", "Menu Color", "Menu B"));
 	if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetTextColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
@@ -844,7 +846,7 @@ local function DrawSlider(self, w, h, var, maxy, posx, posy, dist)
 		var[3] = new;
 	end
 
-	elseif(gOption("Settings", "Misc", "Skin") == "em0tion beta") then
+	elseif(gOption("Settings", "Misc", "Skin") == "intervention.lost 1.0") then
 	local curnum = var[3];
 	local max = var[4];
 	local size = var[5];
@@ -1018,7 +1020,7 @@ surface.SetFont("memeyou2");
 	end
 
 surface.SetFont("memeyou2");
-elseif(gOption("Settings", "Misc", "Skin") == "em0tion beta") then
+elseif(gOption("Settings", "Misc", "Skin") == "intervention.lost 1.0") then
 	local size = var[5];
 	local curopt = var[3];
 
@@ -1201,7 +1203,7 @@ local function DrawSubSub(self, w, h, k, var)
 
 	surface.DrawText(opt);
 
-	elseif(gOption("Settings", "Misc", "Skin") == "em0tion beta") then
+	elseif(gOption("Settings", "Misc", "Skin") == "intervention.lost 1.0") then
 
 	surface.SetDrawColor(gInt("Colors", "Menu Color", "Menu R"), gInt("Colors", "Menu Color", "Menu G"), gInt("Colors", "Menu Color", "Menu B"));
 	if(gBool("Settings", "Misc", "Rainbow mode")) then surface.SetDrawColor(HSVToColor( RealTime() * 120 % 360, 1, 1 )) end
@@ -1436,7 +1438,7 @@ local function menu()
 		surface.DrawLine( 0, 61 + i, 5, 61 + i)
 		surface.DrawLine( w, 61 + i, w - 5, 61 + i)
 		end
-		elseif(gOption("Settings", "Misc", "Skin") == "em0tion beta") then
+		elseif(gOption("Settings", "Misc", "Skin") == "intervention.lost 1.0") then
 		for i = 1, 5 do
 		surface.SetDrawColor(35, 35, 35)
 		surface.DrawLine( 0, 61 + i, w, 61 + i)
@@ -1895,7 +1897,7 @@ end
 local aimtarget;
 
 hook.Add("HUDPaint", "", function()
-	draw.SimpleText("em0tion private", "BudgetLabel", 10, 10, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_LEFT)
+	draw.SimpleText("intervention.lost private", "BudgetLabel", 10, 10, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_LEFT)
 	draw.SimpleText(tostring(os.date("%I:%M:%S")), "BudgetLabel", 10, 20, Color(255, 255, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_LEFT)	surface.SetDrawColor(255,15,15)
 	surface.SetDrawColor(255,15,15)
 	surface.SetDrawColor(255,15,15)
@@ -2532,7 +2534,7 @@ hook.Add("Think", "tdetector", function()
 	if ( ent:IsWeapon() and ent.CanBuy and IsValid( ent:GetOwner() ) and ent:GetOwner():IsPlayer() ) then
 		local owner = ent:GetOwner();
 		if !hasfoundt then
-		chat.AddText(Color(0, 182, 255), "[em0tion] ",Color(255, 0, 0), owner:Nick(),Color(255, 255, 255), " has been detected as a ",Color(255, 0, 0), "TRAITOR!")
+		chat.AddText(Color(0, 182, 255), "[intervention.lost] ",Color(255, 0, 0), owner:Nick(),Color(255, 255, 255), " has been detected as a ",Color(255, 0, 0), "TRAITOR!")
 		hasfoundt = true
 		end
 	end
@@ -2542,7 +2544,7 @@ end)
 if MOTDgd or MOTDGD then
 function MOTDgd.GetIfSkip()
 	if(gBool("Misc", "Bypasses", "Block ads")) then
-		chat.AddText(Color(0, 182, 255), "[em0tion] ",Color(255, 255, 255), "Blocked ad.")
+		chat.AddText(Color(0, 182, 255), "[intervention.lost] ",Color(255, 255, 255), "Blocked ad.")
 		return true
 		end
 	end
@@ -2562,11 +2564,11 @@ if( opt == "Owned" ) then
 elseif( opt == "Killed by" ) then
 	RunConsoleCommand("say", killed:GetName().." was killed by "..me:Nick())
 elseif(opt == "Advertise") then
-RunConsoleCommand("say", "Destroyed by em0tion!")
+RunConsoleCommand("say", "Destroyed by intervention.lost!")
 elseif(opt == "HvH") then
 RunConsoleCommand("say", "Hey "..killed:GetName()..", you should get a better cheat.")
-elseif(opt == "em0tion.xyz") then
-RunConsoleCommand("say", "em0tion - Best memeware paste!")
+elseif(opt == "intervention.lost.cf") then
+RunConsoleCommand("say", "intervention.lost - Best memeware paste!")
 end
 end
 end
@@ -2665,6 +2667,6 @@ end
 
 
 for i = 1, 300 do print(" ") end
-MsgC(Color(255, 255, 255), "em0tion beta\nMade by houseofpain.\n")
-chat.AddText(Color(0, 182, 255), "[em0tion] ",Color(255, 255, 255), "Loaded successfully.")
+MsgC(Color(255, 255, 255), "intervention.lost beta\nMade by houseofpain.\n")
+chat.AddText(Color(0, 182, 255), "[intervention.lost] ",Color(255, 255, 255), "Loaded successfully.")
 loadconfig()
